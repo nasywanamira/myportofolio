@@ -149,4 +149,4 @@ WHITENOISE_USE_FINDERS = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-## komen buat push
+## komen buat push lagi
