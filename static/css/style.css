@@ -4,25 +4,39 @@
     box-sizing: border-box;
 }
 
-:root {
+:root { /* buat nyimpen warna2 yang mau dipake*/
     --ink: #1c1917;
     --paper: #faf6f0;
-    --accent: #d95d39;
+    --accent: tomato;
     --accent-dark: #a8442a;
-    --line: #e3d9c9;
+    --line: #e81465;
     --text-muted: #6b6459;
     --radius: 4px;
+    --butter: #fffbd5;   
+    --bg-card: #ffffff;     
+    --bg-window: #e7f0fd;      
+    --accent-pink: #ffe6f1;  
+    --accent-mint: #bdfea4;  
+    --text-dark: #1e1e1e;  
+    --border-line: #1e1e1e;    
+    --ungu: #c4cdff;
+    --biruu: #c4e0ff;
+    --mint: #dbffee;
+    --teal: #c5faff;
+    --strawberry: #FFF0F5;
+    --dark-purple: #401067;
+    --dark-blue: #8eaee2;
 }
 
 body {
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--ink);
-    background-color: var(--paper);
+    font-family: -apple-system, "Segoe UI", Roboto, "Ubuntu Mono", Helvetica, Arial, sans-serif;
+    color: var(--text-dark);
+    background-color: var(--biruu);
     line-height: 1.6;
 }
 
 h1, .brand {
-    font-family: "Space Grotesk", -apple-system, sans-serif;
+    font-family: "Helvetica", -apple-system, sans-serif;
 }
 
 .container {
@@ -33,6 +47,9 @@ h1, .brand {
 
 .site-header {
     border-bottom: 1px solid var(--line);
+}
+.highlight {
+    background-color: white;
 }
 
 .site-header .container {
@@ -82,21 +99,22 @@ h1, .brand {
 }
 
 .hero-kicker {
-    font-size: 0.85rem;
+    font-size: 1rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--accent-dark);
+    color: #f41a6e;
     font-weight: 700;
     margin-bottom: 0.75rem;
 }
 
 .hero-identity h1 {
     font-size: clamp(3rem, 7vw, 5rem);
-    line-height: 0.95;
+    line-height: 1.15;
 }
 
 .bio {
-    color: var(--text-muted);
+    font-family: "Ubuntu Mono", sans-serif;
+    color: #f41a6e;
     max-width: 480px;
     margin-bottom: 1.5rem;
 }
@@ -111,7 +129,7 @@ h1, .brand {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--text-muted);
+    color: var(--text-dark);
     margin-bottom: 0.15rem;
 }
 
@@ -120,18 +138,19 @@ h1, .brand {
 }
 
 .social-links {
-    display: flex;
-    gap: 0.5rem;
+    display: flex; /* biar sejajar ke samping*/
+    gap: 0.75rem;
     flex-wrap: wrap;
+    margin-top: 1rem;
 }
 
 .social-link {
-    display: inline-block;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-decoration: none;
-    color: var(--paper);
-    background-color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;    
+    width: 42px;
+    height: 42px;
+    background-color: var(--accent-mint);
     border-radius: var(--radius);
     padding: 0.5rem 1.1rem;
     transition: background-color 0.2s ease;
@@ -139,6 +158,12 @@ h1, .brand {
 
 .social-link:hover {
     background-color: var(--accent);
+}
+
+.social-link img { /* ukuran gambar icon nya di dalem kotak*/
+    width: 30px;
+    height: 30px;
+    display: block;
 }
 
 .hero-photo {
@@ -153,7 +178,7 @@ h1, .brand {
     left: 1.25rem;
     width: 100%;
     height: 100%;
-    background-color: var(--accent);
+    background-color: var(--butter);
     border-radius: var(--radius);
     z-index: 0;
 }
@@ -171,7 +196,7 @@ h1, .brand {
 
 .site-footer {
     padding: 1.5rem;
-    color: var(--text-muted);
+    color: var(--text-dark);
     font-size: 0.85rem;
     border-top: 1px solid var(--line);
 }
