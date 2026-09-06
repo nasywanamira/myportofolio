@@ -201,6 +201,77 @@ h1, .brand {
     border-top: 1px solid var(--line);
 }
 
+/* Section: Experiences 
+ngasih jarak  vertikal (atas bawah 48px, kiri kanan 0*/
+.experiences-section {
+    padding: 48px 0;
+}
+
+/* judul "Experiences" dibuat tebel dan berjarak dari subjudul
+*/
+.section-title {
+    font-size: 2rem;
+    font-weight:700;
+    margin-bottom: 6px;
+    background: var(--ungu);
+    color: #750e0e;
+}
+
+/* teks subjudul
+*/
+.section-bio {
+    color: var(--dark-purple);
+    font-size: 1.3rem;
+    margin-bottom:28px;
+}
+
+.experience-grid {
+    display: grid;
+    /* lock: otomatis membagi kolom, minimal lebar kartu 250px, maksimal 1fr 
+    grid akan otomatis menghitung: kalau layar lebar (desktop), ketiga kartu dijejerkan 3 kolom. klo layar mengecil, 
+    kartu otomatis turun ke baris baru tanpa perlu repot setel ukuran piksel manual.*/
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px; /* jarak antar kartu */
+}
+
+.experience-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    /* animasi halus saat kursor mengarah ke kartu */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* kartu urutan ganjil */
+.experience-card:nth-child(odd) {
+    background-color: var(--mint);
+    color: var(--text-dark);
+}
+
+/* kartu urutan genap */
+.experience-card:nth-child(even) {
+    background-color: var(--paper);
+    color: var(--text-dark);
+}
+
+/* Efek hover: kartu terangkat sedikit saat disorot kursor*/
+.experience-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+}
+
+.experience-desc {
+    margin-top: 12px;
+    color: var(--black);
+    font-size: 0.95rem;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+}
+
+
 @media (max-width: 600px) {
     .hero-grid {
         grid-template-columns: 1fr;
