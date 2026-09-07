@@ -11,23 +11,27 @@
     <link rel="icon" type="image/jpg" href="/static/img/favicon.jpg"> <!-- untuk icon bar di tab -->
 </head>
 <body>
+    <!-- HEADER dan my main NAVIGATION gw
+     elemen semantik = <header> dan <nav> -->
     <header class="site-header">
         <div class="container">
             <a href="#profile" class="brand">NAMI's PORTOFOLIO</a>
             <nav>
-                <a href="#profile">Profile</a>
-                <a href="#experiences">Experiences</a>
+                <a href="#profile"><b>Profile</b></a>
+                <a href="#experiences"><b>Experiences</b></a>
             </nav>
         </div>
     </header>
 
     <main>
+        <!-- Section 1: HERO / PROFILE -->
         <section class="hero" id="profile">
             <div class="container hero-grid">
                 <div class="hero-identity">
                     <p class="hero-kicker">Information Systems &middot; Universitas Indonesia</p>
                     <h1>Nasywa <span class="highlight">Nami</span>ra Suhendro</h1>
                 </div>
+                <!-- Section: HERO PHOTO & DETAILS (bio) -->
                 <div class="hero-photo">
                     <div class="photo-block"></div>
                     <img class="avatar" src="/static/img/MyFoto.jpeg" alt="Photo of Nasywa">
@@ -36,6 +40,7 @@
                     <p class="bio"><big>Driven by curiosity and learning by doing. I show up, embrace the challenge (even if it's scary), 
                         and figure it out as I go <span>;)</span> especially in business analysis and partnerships!! </big></p>
                     <dl class="meta-list">
+                        <!--    description list -->
                         <div class="meta-row">
                             <dt>NPM</dt>
                             <dd>2506532196</dd>
@@ -46,6 +51,7 @@
                         </div>
                     </dl>
                     <div class="social-links">
+                        <!-- social media links -->
                         <a href="https://github.com/nasywanamira" class="social-link"><img src="/static/img/github.png" alt="GitHub"></a> <!-- icon nya ukuran 2xl dan ada animasi yeyy-->
                         <a href="https://www.linkedin.com/in/nasywa-namira-suhendro-/" class="social-link"><img src="/static/img/linkedin.png" alt="LinkedIn"></a>
                         <a href="mailto:nasywa.namira@ui.ac.id" class="social-link"><img src="/static/img/envelope.png" alt="Email"></a>
@@ -54,64 +60,130 @@
             </div>
         </section>
 
+        <!-- Section 2: EXPERIENCES -->
         <section id="experiences" class="experiences">
             <div class="container">
                 <h1 class="section-title"><big>Experiences</big></h1>
                 <p class="section-bio">Take a look at some of my experiences!</p>
 
             <div class="experience-grid">
-            <!-- experience 1 -->
+            <!-- experience 1: RISTEK -->
              <article class="experience-card">
-            <h3>RISTEK Fasilkom UI</h3>
-            <h4 class="experience-role">Business Growth &amp; Partnerships Associate</h4>
-            <p class="experience-desc">
-             Managing corporate relations, partnerships, strategic sponsorships, and business development initiatives for <b>RISTEK Fasilkom UI</b>, a student organization at the Faculty of Computer Science, Universitas Indonesia.
-            </p>
+                <details>
+                    <summary class="exp-summary">
+                        <div class="summary-header">
+                             <h3>RISTEK Fasilkom UI</h3>
+                            <h4 class="experience-role">Business Growth &amp; Partnerships Associate</h4>
+                        </div>
+                    </summary>
+                    <div class="exp-expanded-content">
+                        <!-- konten yg muncul saat diklik -->
+                        <img src="/static/img/ristek.jpg" alt="RISTEK Fasilkom UI" class="exp-img">
+                         <p class="experience-desc">
+                            Managing corporate relations, partnerships, strategic sponsorships, and business development initiatives for <b>RISTEK Fasilkom UI</b>, a student organization at the Faculty of Computer Science, Universitas Indonesia.
+                        </p>
+                    </div>
+                </details>
         </article>
 
-        <!-- experience 2 -->
+        <!-- experience 2: SISTECH 2026 -->
         <article class="experience-card">
-            <h3>SISTECH 2026 by RISTEK</h3>
-            <h4 class="experience-role">Teaching Assistant Business Analysis &amp; Strategy</h4>
-            <p class="experience-desc">
-                 Designing curriculum modules and assisting participants in understanding business analysis and strategy concepts, as well as providing guidance on practical applications in real-world scenarios.
-                </p>
+            <details>
+                <summary class="exp-summary">
+                    <div class="summary-header">
+                        <h3>SISTECH 2026 by RISTEK</h3>
+                        <h4 class="experience-role">Teaching Assistant Business Analysis &amp; Strategy</h4>
+                    </div>
+                </summary>
+                <div class="exp-expanded-content">
+                    <!-- konten yg muncul saat diklik -->
+                    <img src="/static/img/sistech.jpg" alt="SISTECH 2026" class="exp-img">
+                    <p class="experience-desc">
+                        Designing curriculum modules and assisting participants in understanding business analysis and strategy concepts, as well as providing guidance on practical applications in real-world scenarios.
+                    </p>
+                </div>
+            </details>
         </article>
 
-        <!-- experience 3 -->
+        <!-- experience 3: Hangry -->
          <article class="experience-card">
-        <h3>Hangry</h3>
-        <h4 class="experience-role">Hangry Tasting Club</h4>
-            <p class="experience-desc"> Partnered with Hangry (F&B) to promote food products 
-                through creative social media content on X. 
-                Then I created engaging posts, reviewed products, and built audience interaction to increase brand visibility and campaign reach.</p>
+            <details>
+                <summary class="exp-summary">
+                    <div class="summary-header">
+                        <h3>Hangry</h3>
+                        <h4 class="experience-role">Hangry Tasting Club</h4>
+                    </div>
+                </summary>
+                <div class="exp-expanded-content">
+                    <!-- konten yg muncul saat diklik -->
+                    <img src="/static/img/hangry.jpg" alt="Hangry Tasting Club" class="exp-img">
+                    <p class="experience-desc"> Partnered with Hangry (F&B) to promote food products 
+                        through creative social media content on X. 
+                        Then I created engaging posts, reviewed products, and built audience interaction to increase brand visibility and campaign reach.
+                    </p>
+                </div>
+            </details>
         </article>
 
-        <!-- experience 4 -->
+        <!-- experience 4: Open House Fasilkom UI -->
          <article class="experience-card">
-            <h3>Open House Fasilkom UI</h3>
-            <h4 class="experience-role">Vice Person In Charge Ambassador</h4>
-            <p class="experience-desc">Co-led the Ambassador division to amplify event awareness, oversaw student ambassadors throughout campaigns, 
-                and developed special programs to engage prospective students with Open House Fasilkom UI.</p>
-         </article>
-
-        <!-- experience 5 -->
+            <details>
+                <summary class="exp-summary">
+                    <div class="summary-header">
+                        <h3>Open House Fasilkom UI</h3>
+                        <h4 class="experience-role">Vice Person In Charge Ambassador</h4>
+                    </div>
+                </summary>
+                <div class="exp-expanded-content">
+                    <!-- konten yg muncul saat diklik -->
+                    <img src="/static/img/openhouse.jpg" alt="Open House Fasilkom UI" class="exp-img">
+                    <p class="experience-desc">Co-led the Ambassador division to amplify event awareness, oversaw student ambassadors throughout campaigns, 
+                        and developed special programs to engage prospective students with Open House Fasilkom UI.</p>
+                </div>
+            </details>
+        </article>
+        
+        <!-- experience 5: DDP-0 -->
          <article class="experience-card">
-            <h3>Dasar-Dasar Pemrograman 0</h3>
-            <h4 class="experience-role">Programming Mentor</h4>
-            <p class="experience-desc">Volunteered as a programming mentor for incoming freshman students at Fasilkom UI, delivering foundational programming concepts 
-                and guiding hands-on problem-solving exercises to prepare them for their first academic semester.</p>
-            </article>
+            <details>
+                <summary class="exp-summary">
+                    <div class="summary-header">
+                        <h3>Dasar-Dasar Pemrograman 0</h3>
+                        <h4 class="experience-role">Programming Mentor</h4>
+                    </div>
+                </summary>
+                <div class="exp-expanded-content">
+                    <!-- konten yg muncul saat diklik -->
+                    <img src="/static/img/programming.jpg" alt="Programming Mentor" class="exp-img">
+                    <p class="experience-desc">Volunteered as a programming mentor for incoming freshman students at Fasilkom UI, delivering foundational programming concepts 
+                        and guiding hands-on problem-solving exercises to prepare them for their first academic semester.</p>
+                </div>
+            </details>
+        </article>
 
-        <!-- experience 6 -->
+        <!-- experience 6: ChatGPT Lab by OpenAI x RISTEK -->
          <article class="experience-card">
-            <h3>ChatGPT Lab by OpenAI x RISTEK</h3>
-            <h4 class="experience-role">Liaison Officer</h4>
-            <p class="experience-desc">Had the valuable opportunity to collaborate with representatives from OpenAI and the ChatGPT Lab Indonesia team, 
-                assisting with guest coordination, logistical communication, and on-ground support to ensure the collaborative event ran smoothly.</p>
-            </article>
+            <details>
+                <summary class="exp-summary">
+                    <div class="summary-header">
+                        <h3>ChatGPT Lab by OpenAI x RISTEK</h3>
+                        <h4 class="experience-role">Liaison Officer</h4>
+                    </div>
+                </summary>
+                <div class="exp-expanded-content">
+                    <!-- konten yg muncul saat diklik -->
+                    <img src="/static/img/chatgpt.jpg" alt="ChatGPT Lab" class="exp-img">
+                    <p class="experience-desc">Had the valuable opportunity to collaborate with representatives from OpenAI and the ChatGPT Lab Indonesia team, 
+                        assisting with guest coordination, logistical communication, and on-ground support to ensure the collaborative event ran smoothly.
+                    </p>
+                </div>
+            </details>
+        </article>
 
-        </section>
+    </div> <!-- penutup untuk div class="experience-grid" -->
+</div> <!-- penutup untuk div class="container" -->
+
+</section>
     </main>
 
     <footer class="site-footer">
