@@ -5,7 +5,7 @@
 }
 
 :root { /* buat nyimpen warna2 yang mau dipake*/
-    --ink: #1c1917;
+    --ink: #1c1917; 
     --paper: #faf6f0;
     --accent: tomato;
     --accent-dark: #a8442a;
@@ -48,6 +48,7 @@ h1, .brand {
 .site-header {
     border-bottom: 1px solid var(--line);
 }
+
 .highlight {
     background-color: white;
 }
@@ -152,7 +153,6 @@ h1, .brand {
     height: 42px;
     background-color: var(--accent-mint);
     border-radius: var(--radius);
-    padding: 0.5rem 1.1rem;
     transition: background-color 0.2s ease;
 }
 
