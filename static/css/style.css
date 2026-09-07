@@ -26,6 +26,13 @@
     --strawberry: #FFF0F5;
     --dark-purple: #401067;
     --dark-blue: #8eaee2;
+    --y2k-blue: #3b66f5; 
+    --y2k-sky: #dcebff; 
+    --y2k-lime: #c8ff54; 
+    --y2k-ice: #f4f8ff;  
+    --border-line: #101524;  
+    --text-dark: #121826;
+
 }
 
 body {
@@ -59,7 +66,11 @@ h1, .brand {
 }
 
 .highlight {
-    background-color: white;
+    background-color: var(--biruu);
+}
+
+.highlightt{
+    background-color: var(--accent-mint)
 }
 
 .site-header .container {
@@ -96,23 +107,32 @@ h1, .brand {
 }
 
 .site-header nav a:hover {
-    background-color: var(--butter);
+    background-color: var(--line);
     color: rgb(34, 1, 1);
     box-shadow: 4px 4px 0px var(--ink);
     transform: translate(-1px, -1px);
 }
 
 .hero {
-    padding: 4.5rem 0 5rem;
+    padding: 2.5rem 0 3.5rem;
 }
 
 .hero-grid {
     display: grid;
-    grid-template-columns: 1.3fr 1fr;
+    grid-template-columns: 1.2fr 1.1fr;
     grid-template-areas:
         "identity photo"
         "details  photo";
-    gap: 1.5rem 3rem;
+    gap: 1.5rem 2.5rem;
+    align-items: center;
+
+    /* kotak melengkung gt*/
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border: 2px solid #5b8df9; 
+    border-radius: 28px;    
+    padding: 3rem 3.5rem;      
+    box-shadow: 0 12px 35px rgba(59, 102, 245, 0.12); 
 }
 
 .hero-identity {
@@ -124,12 +144,13 @@ h1, .brand {
 }
 
 .hero-kicker {
-    font-size: 1rem;
+    font-size: 0.85rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #f41a6e;
     font-weight: 700;
     margin-bottom: 0.75rem;
+    white-space: nowrap; /* biar kalimat ttp satu baris*/
 }
 
 .hero-identity h1 {
@@ -142,6 +163,7 @@ h1, .brand {
     color: #f41a6e;
     max-width: 480px;
     margin-bottom: 1.5rem;
+    text-align: justify;
 }
 
 .meta-list {
@@ -197,14 +219,7 @@ h1, .brand {
 }
 
 .photo-block {
-    position: absolute;
-    top: 1.25rem;
-    left: 1.25rem;
-    width: 100%;
-    height: 100%;
-    background-color: var(--butter);
-    border-radius: var(--radius);
-    z-index: 0;
+    display: none;
 }
 
 .avatar {
@@ -212,10 +227,12 @@ h1, .brand {
     z-index: 1;
     display: block;
     width: 100%;
+    max-width: 420px;
     aspect-ratio: 1 / 1;
-    object-fit: cover;
-    border-radius: var(--radius);
-    border: 3px solid var(--ink);
+    height: auto;
+    object-fit: contain;
+    border-radius: 0;
+    border: none;
 }
 
 .site-footer {
@@ -227,29 +244,49 @@ h1, .brand {
     font-size: 0.85rem;
 }
 
-/* Section: Experiences 
-ngasih jarak  vertikal (atas bawah 48px, kiri kanan 0*/
+/* Section: Experiences */
+
 .experiences {
-    padding: 48px 0;
+    padding: 2.5rem 0 4.5rem;
+}
+
+.experiences .container{
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border: 2px solid #5b8df9;
+    border-radius: 28px; /* sudut melengkung halus */
+    padding: 2.5rem; /* space di sekeliling konten */
+    box-shadow: 0 12px 35px rgba(59, 102, 245, 0.12);
+}
+
+.experiences-header-bar {
+    background-image: url('/static/img/yellow.png');
+    border: 2px solid #2351af;
+    border-radius: 14px;/* melengkung di sisi atas */
+    padding: 0.85rem 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(35, 81, 175, 0.15);
 }
 
 /* judul "Experiences" dibuat tebel dan berjarak dari subjudul
 */
 .section-title {
-    font-size: 2rem;
-    font-weight:700;
-    margin-bottom: 6px;
-    background: var(--ungu);
-    color: #750e0e;
+    display: inline-block;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.95rem;
+    font-weight:800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 0;
+    background: transparent;
+    display: flex;
+    color: #ffffff;
+    gap: 0.5rem;
+    align-items: center;
 }
 
 /* teks subjudul
 */
-.section-bio {
-    color: var(--dark-purple);
-    font-size: 1.3rem;
-    margin-bottom:28px;
-}
 
 .experience-grid {    
     /* container grid dibuat maksimal 1 or 2 kolom*/
@@ -260,30 +297,29 @@ ngasih jarak  vertikal (atas bawah 48px, kiri kanan 0*/
 }
 
 .experience-card {
-    border: 2px solid var(--border-line);
-    border-radius: 12px;
-    padding: 1.25rem 1.5rem;
-    box-shadow: 4px 4px 0px var(--dark-blue);
+    background-color: var(--accent-pink);
+    border: 2px solid var(--y2k-blue);
+    border-radius: 16px;
+    padding: 1.35rem 1.5rem;
+    box-shadow: 4px 4px 0px var(--y2k-blue);
     /* animasi halus saat kursor mengarah ke kartu */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* kartu urutan ganjil */
 .experience-card:nth-child(odd) {
-    background-color: var(--mint);
-    color: var(--text-dark);
+    background-color: #ffffff;
 }
 
 /* kartu urutan genap */
 .experience-card:nth-child(even) {
-    background-color: var(--paper);
-    color: var(--text-dark);
+    background-color: var(--y2k-ice);
 }
 
 /* Efek hover: kartu terangkat sedikit saat disorot kursor*/
 .experience-card:hover {
     transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0px var(--ink);
+    box-shadow: 6px 6px 0px var(--y2k-blue);
 }
 
 /* bagian judul yg bisa diklik*/
@@ -318,9 +354,9 @@ details[open] .exp-summary::before {
 
 .role-title {
     display: block;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.95rem;
-    color: var(--ink);
+    color: var(--y2k-blue);
     transition: color 0.15s ease;
 }
 
@@ -371,6 +407,7 @@ details[open] .exp-summary::before {
     height: 28px;
     object-fit: contain;
     border-radius: 4px;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .brand-name {
@@ -384,12 +421,14 @@ details[open] .exp-summary::before {
 .badge {
     display: inline-block;
     font-size: 0.75rem;
-    font-weight: 500;
-    color: #64748b;
-    background-color: #f1f5f9;
+    font-weight: 700;
+    color:var(--ink);
+    background-color: var(--accent-mint);
+    border: 1.5px solid var(--ink);
     border-radius: 9999px;
     padding: 0.15rem 0.55rem;
     margin-top: 0.3rem;
+    box-shadow: 1.5px 1.5px 0px var(--ink);
 }
 
 @media (max-width: 600px) {
@@ -414,11 +453,20 @@ details[open] .exp-summary::before {
     }
 
     .exp-expanded-content {
+        margin-top: 1rem;
+        padding-top: 0.85rem;
+        border-top: 1.5px dashed var(--y2k-sky);
+        display: flex;
+        gap: 0.75rem;
         flex-direction: column; /* gambar di atas, teks di bawah */
     }
 
     .exp-img {
         width: 100%;
         height: 180px;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 2px solid var(--ink);
     }
 }
