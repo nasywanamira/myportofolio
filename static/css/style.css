@@ -203,7 +203,7 @@ h1, .brand {
 
 /* Section: Experiences 
 ngasih jarak  vertikal (atas bawah 48px, kiri kanan 0*/
-.experiences-section {
+.experiences {
     padding: 48px 0;
 }
 
@@ -225,21 +225,19 @@ ngasih jarak  vertikal (atas bawah 48px, kiri kanan 0*/
     margin-bottom:28px;
 }
 
-.experience-grid {
+.experience-grid {    
+    /* container grid dibuat maksimal 1 or 2 kolom*/
     display: grid;
-    /* lock: otomatis membagi kolom, minimal lebar kartu 250px, maksimal 1fr 
-    grid akan otomatis menghitung: kalau layar lebar (desktop), ketiga kartu dijejerkan 3 kolom. klo layar mengecil, 
-    kartu otomatis turun ke baris baru tanpa perlu repot setel ukuran piksel manual.*/
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px; /* jarak antar kartu */
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); /* min. 360px biar cukup menampung 2 kolom lebar atau 1 kolom di layar medium */
+    gap: 1.5rem; /* jarak antar kartu */
+    align-items: start; /* lock tinggi kartu sesuai kontennya masing-masing biar pas sebelahnye diklik ga ikutan melar ke bawah*/
 }
 
 .experience-card {
-    border: 1px solid #e5e7eb;
+    border: 2px solid var(--border-line);
     border-radius: 12px;
-    padding: 24px;
-    font-size: 0.95rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    padding: 1.25rem 1.5rem;
+    box-shadow: 4px 4px 0px var(--dark-blue);
     /* animasi halus saat kursor mengarah ke kartu */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -258,19 +256,115 @@ ngasih jarak  vertikal (atas bawah 48px, kiri kanan 0*/
 
 /* Efek hover: kartu terangkat sedikit saat disorot kursor*/
 .experience-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px var(--ink);
+}
+
+/* bagian judul yg bisa diklik*/
+.exp-summary {
+    cursor: pointer;
+    list-style: none; /* menghilangkan bullet points bawaan*/
+    user-select: none; /* mencegah teks disorot saat diklik */
+}
+
+.exp-summary::-webkit-details-marker {
+    display: none;
+}
+
+/* panah muter ke bawah saat kartu terbuka */
+details[open] .exp-summary::before {
+    transform: rotate(90deg);
+}
+
+.summary-header h3{
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--dark-purple);
+    margin-top: 0.2rem;
+}
+
+.experience-role {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--dark-blue);
+    margin-top: 0.2rem;
+}
+
+.role-title {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--ink);
+    transition: color 0.15s ease;
+}
+
+.exp-summary:hover .role-title {
+    color: var(--line);
+}
+
+/* konten yg muncul setelah diklik (foto + desc sampingan) */
+.exp-expanded-content {
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1.5px dashed var(--line);
+    display: flex;
+    gap: 0.75rem;
+    flex-direction: column;
+}
+
+.exp-img {
+    width: 100%;
+    height: auto; /* biar tinggi foto ngikut rasio asli*/
+    aspect-ratio: 16 / 9;
+    object-fit: contain; /* biar foto gk kena crop*/
+    background-color: #f1f5f9;
+    border-radius: 6px;
+    border: 2px solid var(--ink);
 }
 
 .experience-desc {
-    margin-top: 12px;
-    color: var(--black);
-    font-size: 0.95rem;
+    color: var(--ink);
+    font-size: 0.88rem;
+    margin: 0;
+    hyphens: auto;
+    line-height: 1.5;
     text-align: justify;
     text-justify: inter-word;
-    hyphens: auto;
 }
 
+/* 1. Header logo di samping nama organisasi */
+.card-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.85rem;
+}
+
+.brand-logo {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.brand-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+}
+
+/* badge periode tanggal */
+.badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #64748b;
+    background-color: #f1f5f9;
+    border-radius: 9999px;
+    padding: 0.15rem 0.55rem;
+    margin-top: 0.3rem;
+}
 
 @media (max-width: 600px) {
     .hero-grid {
@@ -287,5 +381,18 @@ ngasih jarak  vertikal (atas bawah 48px, kiri kanan 0*/
 
     .social-links {
         justify-content: flex-start;
+    }
+
+    .experience-grid {
+        grid-template-columns: 1fr; /* satu kolom di layar kecil */
+    }
+
+    .exp-expanded-content {
+        flex-direction: column; /* gambar di atas, teks di bawah */
+    }
+
+    .exp-img {
+        width: 100%;
+        height: 180px;
     }
 }
