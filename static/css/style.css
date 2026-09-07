@@ -233,6 +233,15 @@ h1, .brand {
     object-fit: contain;
     border-radius: 0;
     border: none;
+
+    /* efek transisi ala ala*/
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+}
+
+/* efek pop up ngezoom dan floating saat kena kursor*/
+.avatar:hover{
+    transform: scale(1.06) translateY(-6px);
 }
 
 .site-footer {
