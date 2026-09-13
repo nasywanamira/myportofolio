@@ -26,29 +26,29 @@
         </div>
     </header>
 
-    <section class="experiences">
+    <section class="education">
         <div class="container">
 
-            <div class="experiences-header-bar">
-                <h1 class="section-title">EXPERIENCES</h1>
-                <p>Take a look at some of my experiences :] !!!</p>
+            <div class="education-header-bar">
+                <h1 class="section-title">EDUCATION</h1>
+                <p>Here are my academic milestones</p>
             </div>
 
-            {% if experience_list %}
-            <div class="experience-grid">
+            {% if education_list %}
+            <div class="education-grid">
 
-                {% for experience in experience_list %}
-                <div class="experience-card">
-                    <div class="card-brand">
-                        {% if experience.thumbnail %}
+                {% for edu in education_list %}
+                <div class="education-card">
+                    <div class="education-brand">
+                        {% if edu.logo %}
                         <img
-                            src="{{ experience.thumbnail }}"
-                            alt="{{ experience.title }} logo"
-                            class="brand-logo">
+                            src="{{ edu.logo }}"
+                            alt="{{ edu.school }} logo"
+                            class="education-logo">
                         {% endif %}
                     
-                        <h3 class="brand-name">
-                            {{ experience.title }}
+                        <h3 class="education-name">
+                            {{ edu.school }}
                         </h3>
                     </div>
 
@@ -57,39 +57,21 @@
                             <div class="summary-header">
 
                                 <span class="role-title">
-                                    {{ experience.category }}
+                                    {{ edu.degree }}
                                 </span>
 
                                 <span class="badge">
-                                    {% if experience.started_at %}
-                                        {{ experience.started_at|date:"F Y"}}
-
-                                        {% if experience.is_ongoing %}
-                                                - Present
-                                            {% elif experience.ended_at %}
-                                                - {{ experience.ended_at|date:"F Y" }}
-                                            {% endif %}
-                                        {% endif %}
+                                    {{ edu.start_year }} - {% if edu.end_year %}{{ edu.end_year }}{% else %}Present{% endif %}
                                 </span>
-
                             </div>
                         </summary>
 
-                        <div class="exp-expanded-content">
-                            {% if experience.main_image %}
-                                    <img
-                                        src="{{ experience.main_image }}"
-                                        alt="{{ experience.title }}"
-                                        class="exp-img">
-                                {% endif %}
-
-                                <p class="experience-desc">
-                                    {{ experience.description }}
+                        <div class="edu-expanded-content">
+                                <p class="education-desc">
+                                    {{ edu.description|linebreaksbr }}
                                 </p>
-
                         </div>
                     </details>
-
                 </div>
             {% endfor %}
 
@@ -97,7 +79,7 @@
         {% else %}
 
             <p class="empty-state">
-                Belum ada pengalaman yang ditambahkan.
+                Belum ada riwayat pendidikan yang ditambahkan.
             </p>
         {% endif %}
 
