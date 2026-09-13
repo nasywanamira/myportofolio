@@ -102,18 +102,19 @@ h1, .brand {
     font-size: 0.9rem;
     display: inline-block;
     padding: 0.45rem 1.25rem;
-    font-weight: 600;
-    background-color: var(--accent-mint);
-    border-radius: var(--radius);
-    transition: allr 0.2s ease;
-    box-shadow: 2px 2px 0px var(--ink);
+    font-weight: 650;
+    background-color: rgba(189, 254, 164, 0.85);
+    backdrop-filter: blur(4px);
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(189, 254, 164, 0.4);
 }
 
 .site-header nav a:hover {
     background-color: var(--line);
-    color: rgb(34, 1, 1);
-    box-shadow: 4px 4px 0px var(--ink);
-    transform: translate(-1px, -1px);
+    color: #ffffff;
+    box-shadow: 0 6px 16px rgba(232, 20, 101, 0.4);
+    transform: translateY(-2px);
 }
 
 .hero {
@@ -285,15 +286,13 @@ h1, .brand {
 */
 .section-title {
     display: inline-block;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 0.95rem;
+    font-family: "Helvetica", -apple-system, sans-serif;
+    font-size: 1.8rem;
     font-weight:800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
     margin: 0;
     background: transparent;
     display: flex;
-    color: #ffffff;
+    color: var(--ink);
     gap: 0.5rem;
     align-items: center;
 }
@@ -310,11 +309,11 @@ h1, .brand {
 }
 
 .experience-card {
-    background-color: var(--y2k-blue);
+    background-color: var(--accent-pink);
     border: 2px solid var(--y2k-blue);
-    border-radius: 16px;
+    border-radius: 24px;
     padding: 1rem 1.15rem;
-    box-shadow: 4px 4px 0px var(--y2k-blue);
+    box-shadow: 0 4px 24px var(--dark-blue);
     /* animasi halus saat kursor mengarah ke kartu */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -331,8 +330,8 @@ h1, .brand {
 
 /* Efek hover: kartu terangkat sedikit saat disorot kursor*/
 .experience-card:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0px var(--y2k-blue);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px var(--y2k-blue);
 }
 
 /* bagian judul yg bisa diklik*/
@@ -558,8 +557,6 @@ details[open] .exp-summary::before {
 .experience-card {
     padding: 1.25rem;
     background-color: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
 }
 
 .experience-category {
@@ -583,4 +580,8 @@ details[open] .exp-summary::before {
     margin-top: 1rem;
     font-size: 0.85rem;
     font-weight: 600;
+}
+
+.experiences-header-bar {
+    font-family: "Helvetica", -apple-system, sans-serif;
 }
