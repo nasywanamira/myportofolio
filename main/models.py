@@ -10,6 +10,7 @@ class Experience(models.Model):
     thumbnail = models.URLField(blank=True, null=True)
     started_at = models.DateTimeField()
     ended_at = models.DateTimeField(blank=True, null=True)
+    main_image = models.CharField(max_length=255, blank=True, null=True)
     def __str__(self):
         return self.title
     

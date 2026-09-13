@@ -44,6 +44,9 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 h1, .brand {
@@ -251,6 +254,7 @@ h1, .brand {
     background-position: center;
     background-repeat: no-repeat;
     font-size: 0.85rem;
+    margin-top: auto;
 }
 
 /* Section: Experiences */
@@ -300,13 +304,13 @@ h1, .brand {
 .experience-grid {    
     /* container grid dibuat maksimal 1 or 2 kolom*/
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); /* min. 360px biar cukup menampung 2 kolom lebar atau 1 kolom di layar medium */
+    grid-template-columns: 1fr 1fr;
     gap: 1.25rem; /* jarak antar kartu */
     align-items: start; /* lock tinggi kartu sesuai kontennya masing-masing biar pas sebelahnye diklik ga ikutan melar ke bawah*/
 }
 
 .experience-card {
-    background-color: var(--accent-pink);
+    background-color: var(--y2k-blue);
     border: 2px solid var(--y2k-blue);
     border-radius: 16px;
     padding: 1rem 1.15rem;
@@ -549,13 +553,6 @@ details[open] .exp-summary::before {
 .experience-section h1 {
     margin: 0.4rem 0 1.5rem;
     font-size: 2rem;
-}
-
-.experience-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /*membuat jumlah kolom menyesuaikan lebar layar. 
-    Kartu akan berjajar ketika ruang cukup dan turun menjadi satu kolom pada layar sempit. */
-    gap: 1rem;
 }
 
 .experience-card {
