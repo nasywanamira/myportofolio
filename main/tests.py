@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from main.models import Experience
+from main.models import Experience, Education
 
 
 class MainTest(TestCase):
@@ -10,7 +10,16 @@ class MainTest(TestCase):
         self.experience = Experience.objects.create(
             title="Asisten Dosen PBP",
             description="Membantu mahasiswa memahami pengembangan web.",
-            category="part-time",
+            category="Part-Time",
+            started_at="2026-01-01",
+        )
+
+        self.education = Education.objects.create(
+            school="Universitas Indonesia",
+            degree="Bachelor of Computer Science",
+            start_year="2025",
+            end_year="Present",
+            description="Mempelajari ilmu komputer."
         )
 
     def test_main_url_is_accessible(self):
@@ -28,7 +37,7 @@ class MainTest(TestCase):
 
     def test_experience_model(self):
         self.assertEqual(str(self.experience), "Asisten Dosen PBP")
-        self.assertEqual(self.experience.category, "part-time")
+        self.assertEqual(self.experience.category, "Part-Time")
         self.assertTrue(self.experience.is_ongoing)
 
     def test_experience_page(self):
@@ -56,6 +65,25 @@ class MainTest(TestCase):
         self.assertFalse(self.experience.is_ongoing)
         self.assertContains(response, "Selesai")
         self.assertNotContains(response, "Sedang berlangsung")
+
+    def test_education_url_is_accessible(self):
+        response = self.client.get(reverse("main:show_education"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "education.html")
+        self.assertContains(response, self.education.school)
+        self.assertContains(response, self.education.degree)
+
+    def test_education_model(self):
+        self.assertEqual(str(self.education), "Universitas Indonesia")
+        self.assertEqual(self.education.degree, "Bachelor of Computer Science")
+
+    def test_empty_education_page(self):
+        Education.objects.all().delete()
+        response = self.client.get(reverse("main:show_education"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Belum ada riwayat pendidikan yang ditambahkan.")
 
 
 # Semua method yang namanya diawali test_ akan dijalankan otomatis oleh Django. Method setUp() dijalankan sebelum setiap test sehingga tiap test memperoleh data awal yang bersih.
