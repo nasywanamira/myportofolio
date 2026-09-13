@@ -32,6 +32,7 @@
     --y2k-ice: #f4f8ff;  
     --border-line: #101524;  
     --text-dark: #121826;
+    
 
 }
 
@@ -286,9 +287,9 @@ h1, .brand {
 */
 .section-title {
     display: inline-block;
-    font-family: "Helvetica", -apple-system, sans-serif;
+    font-family: "Source Code Pro", monospace;
     font-size: 1.8rem;
-    font-weight:800;
+    font-weight:600;
     margin: 0;
     background: transparent;
     display: flex;
@@ -584,4 +585,81 @@ details[open] .exp-summary::before {
 
 .experiences-header-bar {
     font-family: "Helvetica", -apple-system, sans-serif;
+}
+
+.education {
+    padding: 3rem 0; 
+}
+
+.education-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    align-items: start;
+    max-width: 800px;
+    margin: 0 auto; /* posisi otomatis di tengah*/
+}
+
+.education-card {
+    background-color: var(--accent-pink);
+    border: 2px solid var(--y2k-blue);
+    border-radius: 24px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 4px 24px rgba(59, 102, 245, 0.12);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.education-card:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+.education-card:nth-child(even) {
+    background-color: var(--y2k-ice);
+}
+
+.education-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px var(--y2k-blue);
+}
+
+.education-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.85rem;
+}
+
+.education-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.education-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+}
+
+.education-desc {
+    color: var(--ink);
+    font-size: 0.9rem;
+    margin-top: 0.85rem;
+    padding-top: 0.75rem;
+    border-top: 1.5px dashed var(--line);
+    line-height: 1.6;
+    text-align: justify;
+}
+
+.education-header-bar {
+    background-image: url('/static/img/yellow.png');
+    border: 2px solid #2351af;
+    border-radius: 14px;/* melengkung di sisi atas */
+    padding: 0.65rem 1rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 4px 12px rgba(35, 81, 175, 0.15);
+    font-family: "Helvetica", -apple-system, sans-serif;
+    align-items: center;
 }
