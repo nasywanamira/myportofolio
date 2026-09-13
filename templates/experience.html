@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,9 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="icon" type="image/jpg" href="/static/img/favicon.jpg"> <!-- untuk icon bar di tab -->
 </head>
+
 <body>
     <!-- HEADER dan my main NAVIGATION gw
      elemen semantik = <header> dan <nav> -->
@@ -23,38 +25,82 @@
         </div>
     </header>
 
-<main>
-    <section class="experience-section" id="experience">
+    <section class="experiences">
         <div class="container">
-            <p class="section-kicker">Perjalanan saya sejauh ini</p>
-            <h1>Experience</h1>
 
-            <div class="experience-grid">
-                {% for experience in experience_list %}
-                    <article class="experience-card">
-                        <span class="experience-category">
-                            {{ experience.get_category_display }}
-                        </span>
-                        <h2>{{ experience.title }}</h2>
-                        <p class="experience-description">
-                            {{ experience.description }}
-                        </p>
-
-                        {% if experience.is_ongoing %}
-                            <p class="experience-status">Sedang berlangsung</p>
-                        {% else %}
-                            <p class="experience-status">Selesai</p>
-                        {% endif %}
-                    </article>
-                {% empty %}
-                    <p class="empty-state">
-                        Belum ada pengalaman yang ditambahkan.
-                    </p>
-                {% endfor %}
+            <div class="experiences-header-bar">
+                <h1 class="section-title">Experiences</h1>
             </div>
+
+            {% if experience_list %}
+            <div class="experience-grid">
+
+                {% for experience in experience_list %}
+                <div class="experience-card">
+                    <div class="card-brand">
+                        {% if experience.thumbnail %}
+                        <img
+                            src="{{ experience.thumbnail }}"
+                            alt="{{ experience.title }} logo"
+                            class="brand-logo">
+                        {% endif %}
+                    
+                        <h3 class="brand-name">
+                            {{ experience.title }}
+                        </h3>
+                    </div>
+
+                    <details>
+                        <summary class="exp-summary">
+                            <div class="summary-header">
+
+                                <span class="role-title">
+                                    {{ experience.category }}
+                                </span>
+
+                                <span class="badge">
+                                    {% if experience.started_at %}
+                                        {{ experience.started_at|date:"F Y"}}
+
+                                        {% if experience.is_ongoing %}
+                                                - Present
+                                            {% elif experience.ended_at %}
+                                                - {{ experience.ended_at|date:"F Y" }}
+                                            {% endif %}
+                                        {% endif %}
+                                </span>
+
+                            </div>
+                        </summary>
+
+                        <div class="exp-expanded-content">
+                            {% if experience.thumbnail %}
+                                    <img
+                                        src="{{ experience.thumbnail }}"
+                                        alt="{{ experience.title }}"
+                                        class="exp-img">
+                                {% endif %}
+
+                                <p class="experience-desc">
+                                    {{ experience.description }}
+                                </p>
+
+                        </div>
+                    </details>
+
+                </div>
+            {% endfor %}
+
+            </div>
+        {% else %}
+
+            <p class="empty-state">
+                Belum ada pengalaman yang ditambahkan.
+            </p>
+        {% endif %}
+
         </div>
     </section>
-</main>
 
     <footer class="site-footer">
         <div class="container">
