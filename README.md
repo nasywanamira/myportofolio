@@ -31,3 +31,8 @@ Saya menggunakan prompt bertahap dengan menyuruh AI Agent memposisikan dirinya s
 - Keterbatasan AI & Perbaikan Mandiri:
   - AI sempat memberikan kode SVG yang terlalu panjang di HTML. Saya memilih untuk tidak memakainya dan menggantinya dengan file gambar lokal di folder static/img/ agar kodenya lebih rapi dan simpel.
   - Seluruh isi portofolio (bio, riwayat organisasi, kartu pengalaman, dan tema warna neobrutalism) saya tentukan dan rapikan sendiri.
+
+
+
+
+# Tugas 2

@@ -150,4 +150,6 @@ WHITENOISE_USE_FINDERS = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-## komen buat push lagi TOLONGGGG
+CSRF_TRUSTED_ORIGINS = [
+    'https://nasywa-namira-myportofolio.pws.cs.ui.ac.id',
+]
