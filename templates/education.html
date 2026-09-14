@@ -20,7 +20,7 @@
     <header class="site-header">
         <div class="container">
             <a href="{% url 'main:show_main' %}" class="brand">NAMI's PORTOFOLIO</a>
-            <nav>
+            <nav> <!-- navigation button-->
                 <a href="{% url 'main:show_main' %}">Profile</a>
                 <a href="{% url 'main:show_experience' %}">Experience</a>
                 <a href="{% url 'main:show_education' %}">Education</a>
@@ -36,40 +36,42 @@
                 <p>Here are my academic milestones</p>
             </div>
 
-            {% if education_list %}
+            {% if education_list %} <!-- mengecek apakah ada data education yg dikirim dari views.py -->
             <div class="education-grid">
 
-                {% for edu in education_list %}
+                {% for edu in education_list %} <!-- looping education yg ada di experience_list -->
                 <div class="education-card">
                     <div class="education-brand">
-                        {% if edu.logo %}
+                        {% if edu.logo %} <!-- mengecek apakah data education punya logo. kalo ada maka render tag img-->
                         <img
                             src="{{ edu.logo }}"
                             alt="{{ edu.school }} logo"
-                            class="education-logo">
-                        {% endif %}
+                            class="education-logo"> <!-- nampilin logo education, alt text otomatis diambil dari school -->
+                        {% endif %} <!-- nutup kondisi if logo -->
                     
                         <h3 class="education-name">
-                            {{ edu.school }}
+                            {{ edu.school }} <!-- menampilkan nama kampus/sekolah -->
                         </h3>
-                    </div>
+                    </div> <!-- nutup div pembungkus bagian header education (logo + nama sekolah) -->
 
-                    <details>
-                        <summary class="exp-summary">
-                            <div class="summary-header">
+
+                    <details> <!-- elemen collapsible/expandable, bisa di-klik buka-tutup, buat nyembunyiin detail -->
+                        <summary class="exp-summary"> <!-- bagian yang selalu keliatan sebelum di-klik, jadi 'judul' dari details -->
+                            <div class="summary-header"> <!-- wrapper utk nata layout role & tahun secara horizontal -->
 
                                 <span class="role-title">
-                                    {{ edu.degree }}
+                                    {{ edu.degree }} <!-- nampilin gelar/jurusan -->
                                 </span>
 
-                                <span class="badge">
+                                <span class="badge"> <!-- badge kecil utk nampilin rentang tahun -->
                                     {{ edu.start_year }} - {% if edu.end_year %}{{ edu.end_year }}{% else %}Present{% endif %}
+                                     <!-- nampilin tahun mulai, terus dicek: kalo ada end_year tampilin, kalo kosong berarti masih berlangsung → tulis "Present" -->
                                 </span>
                             </div>
                         </summary>
 
-                        <div class="edu-expanded-content">
-                                <p class="education-desc">
+                        <div class="edu-expanded-content"> <!-- konten yang muncul pas details di-expand -->
+                                <p class="education-desc"> <!-- cek dulu ada gambar utama experience atau nggak -->
                                     {{ edu.description|linebreaksbr }}
                                 </p>
                         </div>

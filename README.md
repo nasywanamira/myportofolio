@@ -2,7 +2,7 @@ Nama : Nasywa Namira Suhendro
 NPM : 2506532196
 Kelas : PBP C
 
-# Tugas 1
+### Tugas 1
 1. Ya, saya menggunakan elemen semantik HTML5 seperti <header>, <main>, <section>, dan <article>. Elemen-elemen ini membantu menstrukturkan dokumen web secara hierarkis dan logis, tidak hanya menggunakan tag <div> saja. Dengan membagi halaman menjadi <section id="profile"> dan <section id="experiences">, alur konten yang saya buat menjadi terpisah jelas secara semantik. Penggunaan tag <article> pada tiap kartu experience (misalnya RISTEK, SISTECH, dan DDP 0) mempertegas bahwa tiap kartu merupakan satu informasi utuh. Selain mempermudah keterbacaan kode, struktur ini mendukung aksesibilitas dan optimasi mesin pencari (SEO).
 
 2. Tantangan tata letak utama yang dihadapi adalah menangani tata letak multi-kolom saat viewport mengecil/menyempit:
@@ -35,7 +35,7 @@ Saya menggunakan prompt bertahap dengan menyuruh AI Agent memposisikan dirinya s
 
 
 
-# Tugas 2
+### Tugas 2
 
 ## Deskripsi Proyek Tugas 2
 Pada Tugas 2 ini, saya melakukan pembaruan pada website portofolio dengan mengimplementasikan konsep MVT (Model-View-Template) menggunakan framework Django. Data experience yang sebelumnya ditulis secara hardcoded di dalam HTML, kini telah diubah menjadi dinamis dengan menyimpannya ke dalam database. Dan juga menambahkan section/model baru yaitu Education.

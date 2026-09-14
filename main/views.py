@@ -3,7 +3,7 @@ from django.shortcuts import render
 from main.models import Experience, Education
 
 
-def show_main(request):
+def show_main(request): # untuk main page aka Profile
     context = {
         "name": "Nasywa Namira Suhendro",
         "npm": "2506532196",
@@ -16,14 +16,14 @@ def show_main(request):
     return render(request, "index.html", context)
 
 
-def show_experience(request):
+def show_experience(request): # untuk Experience page
     context = {
         "name": "Nasywa Namira Suhendro",
         "experience_list": Experience.objects.all(),
     }
     return render(request, "experience.html", context)
 
-def show_education(request):
+def show_education(request): # untuk Education page
     education_list = Education.objects.all()
     context = {
         'name': 'Nasywa Namira Suhendro',

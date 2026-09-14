@@ -20,7 +20,7 @@
     <header class="site-header">
         <div class="container">
             <a href="{% url 'main:show_main' %}" class="brand">NAMI's PORTOFOLIO</a>
-            <nav>
+            <nav> <!-- navigation button-->
                 <a href="{% url 'main:show_main' %}">Profile</a>
                 <a href="{% url 'main:show_experience' %}">Experience</a>
                 <a href="{% url 'main:show_education' %}">Education</a>
@@ -36,27 +36,27 @@
                 <p>Take a look at some of my experiences :] !!!</p>
             </div>
 
-            {% if experience_list %}
+            {% if experience_list %} <!-- mengecek apakah ada data experience yg dikirim dari views.py -->
             <div class="experience-grid">
 
-                {% for experience in experience_list %}
+                {% for experience in experience_list %} <!-- looping experience yg ada di experience_list -->
                 <div class="experience-card">
                     <div class="card-brand">
-                        {% if experience.thumbnail %}
+                        {% if experience.thumbnail %} <!-- mengecek apakah data experience punya thumbnail. kalo ada maka render tag img-->
                         <img
                             src="{{ experience.thumbnail }}"
                             alt="{{ experience.title }} logo"
-                            class="brand-logo">
-                        {% endif %}
+                            class="brand-logo"> <!-- nampilin thumbnail/logo dari experience -->
+                        {% endif %} <!-- nutup kondisi if thumbnail  -->
                     
-                        <h3 class="brand-name">
+                        <h3 class="brand-name"> <!-- menampilkan nama organisasi/experience-->
                             {{ experience.title }}
                         </h3>
-                    </div>
+                    </div> <!-- nutup div pembungkus header experience (logo + nama brand) -->
 
-                    <details>
-                        <summary class="exp-summary">
-                            <div class="summary-header">
+                    <details> <!-- collapsible section, bisa diklik buat expand detail experience -->
+                        <summary class="exp-summary"> <!-- bagian ringkas yang selalu keliatan -->
+                            <div class="summary-header"> <!-- wrapper buat nata layout kategori & tanggal -->
 
                                 <span class="role-title">
                                     {{ experience.category }}

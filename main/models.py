@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
 
-class Experience(models.Model):
+class Experience(models.Model): # page Experience
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255)
@@ -18,7 +18,7 @@ class Experience(models.Model):
     def is_ongoing(self):
         return self.ended_at is None
 
-class Education(models.Model):
+class Education(models.Model): # page Education
     school = models.CharField(max_length=255)
     degree = models.CharField(max_length=255)
     start_year = models.CharField(max_length=50)
