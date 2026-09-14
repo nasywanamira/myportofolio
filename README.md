@@ -36,6 +36,16 @@ Saya menggunakan prompt bertahap dengan menyuruh AI Agent memposisikan dirinya s
 
 
 # Tugas 2
+
+## Deskripsi Proyek Tugas 2
+Pada Tugas 2 ini, saya melakukan pembaruan pada website portofolio dengan mengimplementasikan konsep MVT (Model-View-Template) menggunakan framework Django. Data experience yang sebelumnya ditulis secara hardcoded di dalam HTML, kini telah diubah menjadi dinamis dengan menyimpannya ke dalam database. Dan juga menambahkan section/model baru yaitu Education.
+- Fitur & Implementasi Utama:
+* Pembuatan Model Django: Membuat model `Experience` dan `Education` di `models.py` untuk mendefinisikan struktur data portofolio.
+* Migrasi Database: Menggunakan perintah `makemigrations` dan `migrate` untuk menerapkan struktur model ke dalam database.
+* Push Data via Shell: Memasukkan data awal portofolio ke dalam database secara langsung melalui interactive console (`python manage.py shell`).
+* Integrasi View dan Template: Mengambil data dari database melalui `views.py` dan menampilkannya secara dinamis pada halaman web menggunakan template tags Django.
+* Pengurutan Data: Menerapkan logika pengurutan (`order_by`) pada view agar data portofolio yang ditampilkan selalu berurutan dengan rapi.
+
 1. Ketika pengguna membuka halaman portofolio baru, browser mengirimkan request ke server yg pertama kali diterima oleh urls.py sebagai main gate. File ini kemudian mengarahkan rute tersebut ke urls.py tingkat aplikasi, yg bertugas mencocokan URL dengan fungsi yang tepat di dalam view. Fungsi view akan memproses permintaan ini dan meminta data riwayat yang diperlukan kepada model. Model kemudian bertugas mengambil data portofolio tersebut dari database dan mengembalikannya ke view. Setelah data diterima, view akan menyisipkan data dinamis tersebut ke dalam template HTML, lalu merendernya menjadi halaman web utuh yang dikirimkan kembali ke browser pengguna untuk ditampilkan sebagai response.
 
 2. Data untuk bagian portofolio baru sebaiknya disimpan dalam models dan tidak ditulis langsung di dalam template agar aplikasi bersifat dinamis, bukan statis (hardcoded). Dari segi kemudahan pemerihaan (maintainability), menyimpan data di model memungkinkan saya untuk menambah atau mengubah isi portofolio melalui database tanpa harus membongkar dan mengedit kode HTML, sehingga meminimalisir risiko merusak desain halam web. Sementara itu, untuk pengembangan aplikasi (scalability) ke depannya, penggunaan model sangat memudahkan saya jika nanti data experience sudah semakin banyak, karena saya bisa dengan mudah memanfaatkan fitur advanced seperti search, filtering, atau pagination yang tidak akan bisa dilakukan secara efisien jika data diketik manual satu per satu di dalam template html.
