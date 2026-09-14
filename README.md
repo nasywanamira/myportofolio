@@ -44,12 +44,13 @@ Saya menggunakan prompt bertahap dengan menyuruh AI Agent memposisikan dirinya s
 
 ## AI Disclosure
 - Tool yang Digunakan: Google Gemini
-- Tautan Log / Sesi Percakapan: [Sesi Percakapan Gemini]()
+- Tautan Log / Sesi Percakapan: [Sesi Percakapan Gemini](https://share.gemini.google/z8ZhKSEfqYdb)
 - Strategi Prompting
 Saya menggunakan prompt secara bertahap dan interaktif dengan melampirkan screenshot terminal PWS serta tampilan web untuk melakukan debugging. Saya meminta AI untuk bertindak sebagai mentor dan troubleshooter yang bantu menjelaskan penyebab error saat eksekusi Django shell dan memberikan arahann untuk solusi perbaikannya langkah demi langkah.
 - **Bagian yang Dibantu AI:**
 -Bagian yang Dibantu AI:
 1. Memperbaiki masalah tampilan teks, seperti jarak kata yang terlalu renggang
 2. Melakukan debugging dan mengatasi error saat meng-update data, seperti `NameError` (variabel terlewat) dan `FieldError` (salah nama atribut).
+3. Membantu menyusun unit test
 - Keterbatasan AI & Perbaikan Mandiri:
 1. AI sempat keliru mengasumsikan nama field untuk institusi pendidikan sebagai `title` (mengikuti pola model sebelumnya), yang ternyata memicu `FieldError`. Saya kemudian mengecek kembali model saya dan menyadari bahwa nama field yang benar adalah `school`, lalu memperbaikinya secara mandiri di shell.
