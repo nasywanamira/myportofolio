@@ -36,3 +36,20 @@ Saya menggunakan prompt bertahap dengan menyuruh AI Agent memposisikan dirinya s
 
 
 # Tugas 2
+1. Ketika pengguna membuka halaman portofolio baru, browser mengirimkan request ke server yg pertama kali diterima oleh urls.py sebagai main gate. File ini kemudian mengarahkan rute tersebut ke urls.py tingkat aplikasi, yg bertugas mencocokan URL dengan fungsi yang tepat di dalam view. Fungsi view akan memproses permintaan ini dan meminta data riwayat yang diperlukan kepada model. Model kemudian bertugas mengambil data portofolio tersebut dari database dan mengembalikannya ke view. Setelah data diterima, view akan menyisipkan data dinamis tersebut ke dalam template HTML, lalu merendernya menjadi halaman web utuh yang dikirimkan kembali ke browser pengguna untuk ditampilkan sebagai response.
+
+2. Data untuk bagian portofolio baru sebaiknya disimpan dalam models dan tidak ditulis langsung di dalam template agar aplikasi bersifat dinamis, bukan statis (hardcoded). Dari segi kemudahan pemerihaan (maintainability), menyimpan data di model memungkinkan saya untuk menambah atau mengubah isi portofolio melalui database tanpa harus membongkar dan mengedit kode HTML, sehingga meminimalisir risiko merusak desain halam web. Sementara itu, untuk pengembangan aplikasi (scalability) ke depannya, penggunaan model sangat memudahkan saya jika nanti data experience sudah semakin banyak, karena saya bisa dengan mudah memanfaatkan fitur advanced seperti search, filtering, atau pagination yang tidak akan bisa dilakukan secara efisien jika data diketik manual satu per satu di dalam template html.
+
+3. Perintah makemigrations dan migrate pada Django memiliki peran yang berbeda namun saling melengkapi dalam mengelola database. makemigrations berfungsi seperti pembuat draf rancangan, di mana perintah ini akan mendeteksi setiap perubahan yang saya buat pada file models.py (contohnya menambahkan kelas baru atau mengubah field) dan mencatatnya ke dalam sebuah file migrasi tanpa mengubah database yang asli. Sebaliknya, migrate adalah perintah eksekutor yang menerapkan rancangan file migrasi tsb secara langsung ke dalam struktur database fisik, seperti membuat/menghapus tabel. Contohnya, ketika saya baru saja selesai menulis kode untuk model Education, saya harus menjalankan makemigrations terlebih dahulu utk membuat footage perubahannya, lalu dilanjut dengan menjalankan migrate agar Django benar2  menciptakan tabel Education tsb di dalam sistem database saya
+
+## AI Disclosure
+- Tool yang Digunakan: Google Gemini
+- Tautan Log / Sesi Percakapan: [Sesi Percakapan Gemini]()
+- Strategi Prompting
+Saya menggunakan prompt secara bertahap dan interaktif dengan melampirkan screenshot terminal PWS serta tampilan web untuk melakukan debugging. Saya meminta AI untuk bertindak sebagai mentor dan troubleshooter yang bantu menjelaskan penyebab error saat eksekusi Django shell dan memberikan arahann untuk solusi perbaikannya langkah demi langkah.
+- **Bagian yang Dibantu AI:**
+-Bagian yang Dibantu AI:
+1. Memperbaiki masalah tampilan teks, seperti jarak kata yang terlalu renggang
+2. Melakukan debugging dan mengatasi error saat meng-update data, seperti `NameError` (variabel terlewat) dan `FieldError` (salah nama atribut).
+- Keterbatasan AI & Perbaikan Mandiri:
+1. AI sempat keliru mengasumsikan nama field untuk institusi pendidikan sebagai `title` (mengikuti pola model sebelumnya), yang ternyata memicu `FieldError`. Saya kemudian mengecek kembali model saya dan menyadari bahwa nama field yang benar adalah `school`, lalu memperbaikinya secara mandiri di shell.
