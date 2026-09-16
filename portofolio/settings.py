@@ -153,3 +153,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [
     'https://nasywa-namira-myportofolio.pws.cs.ui.ac.id',
 ]
+# CSRF Token merupakan token rahasia yang sifatnya unik dan dibuat oleh server untuk melindungi aplikasi dari request yang tidak terautorisasi.
+# CSRF_TRUSTED_ORIGINS mendaftarkan URL yang sudah dipercaya untuk dapat melakukan proses request ke server.

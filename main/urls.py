@@ -1,13 +1,14 @@
 from django.urls import path
 
-from main.views import show_main, show_experience, show_education
+from main.views import show_main, show_experience, show_education, create_project
 
 app_name = "main" # memberikan namespace pada URL milik aplikasi main.
 
 urlpatterns = [
     path("", show_main, name="show_main"), # profile
     path("experience/", show_experience, name="show_experience"), # experience
-    path("education/", show_education, name="show_education") # education
+    path("education/", show_education, name="show_education"), # education
+    path("projects/add/", create_project, name="create_project"), #project
 ]
 
 # Pola URL "" berarti halaman utama aplikasi tanpa tambahan path.
