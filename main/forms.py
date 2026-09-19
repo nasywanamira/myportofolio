@@ -1,6 +1,6 @@
 from django.forms import ModelForm, TextInput, Textarea, URLInput
 
-from main.models import Project
+from main.models import Project, Education
 
 class ProjectForm(ModelForm):
     class Meta:
@@ -47,6 +47,60 @@ class ProjectForm(ModelForm):
             "project_image_url": URLInput(
                 attrs={
                     "placeholder": "https://drive.google.com/thumbnail?id=...&sz=w1000",
+                }
+            ),
+        }
+
+class EducationForm(ModelForm):
+    class Meta:
+        model = Education
+        fields = [
+            "school",
+            "degree",
+            "start_year",
+            "end_year",
+            "description",
+            "logo",
+        ]
+        labels = {
+            "school": "Nama sekolah /  universitas",
+            "degree": "Jurusan",
+            "start_year": "Tahun masuk",
+            "end_year": "Tahun selesai / lulus",
+            "description": "Deskripsi",
+            "logo": "URL Logo / Gambar",
+        }
+        widgets ={
+            "school": TextInput( # digunakan untuk field teks satu baris
+                attrs={
+                    "placeholder": "Universitas Indonesia",
+                    "maxlength": 255,
+                }   
+            ),
+            "degree": TextInput(
+                attrs={
+                    "placeholder": "S1 Sistem Informasi",
+                }
+            ),
+            "start_year": TextInput(
+                attrs={
+                    "placeholder": "2025"
+                }
+            ),
+            "end_year": TextInput(
+                attrs={
+                    "placeholder": "2029"
+                }
+            ),
+            "description": Textarea( # digunakan untuk field deskripsi yang membutuhkan area teks lebih besar
+                attrs={
+                    "placeholder": "Activities, Achievements, etc.",
+                    "rows": 4
+                }
+            ),
+            "logo": TextInput(
+                attrs={
+                    "placeholder": "https://... (opsional)"
                 }
             ),
         }
