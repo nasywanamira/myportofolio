@@ -1,13 +1,32 @@
 from django.urls import path
 
-from main.views import show_main, show_experience, show_education, create_project, show_projects, get_projects_json, delete_project
+from main.views import (show_main, 
+                        show_experience, 
+                        show_education, 
+                        get_education_json,
+                        create_education,
+                        edit_education,
+                        delete_education, 
+                        create_project, 
+                        show_projects, 
+                        get_projects_json, 
+                        delete_project)
 
 app_name = "main" # memberikan namespace pada URL milik aplikasi main.
 
 urlpatterns = [
+    # Main & Experience
     path("", show_main, name="show_main"), # profile
     path("experience/", show_experience, name="show_experience"), # experience
+
+    # Education
     path("education/", show_education, name="show_education"), # education
+    path("education/create/", create_education, name="create_education"),
+    path("api/education/", get_education_json, name="get_education_json"),
+    path('education/edit/<int:id>/', edit_education, name='edit_education'),
+    path('education/delete/<int:id>/', delete_education, name='delete_education'),
+
+    # Projects
     path("projects/add/", create_project, name="create_project"), #project
     path("projects/", show_projects, name="show_projects"),
     path("api/projects/", get_projects_json, name="get_projects_json"),

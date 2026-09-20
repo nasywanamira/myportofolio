@@ -8,6 +8,12 @@
             <div class="education-header-bar">
                 <h1 class="section-title">EDUCATION</h1>
                 <p>Here are my academic milestones</p>
+                <a href="{% url 'main:create_education' %}" class="education-add-button">+ Add education</a>
+            </div>
+
+            <!-- tombol add education -->
+             <div style="text-align: center; margin: 20px 0 30px;">
+                <a href="{% url 'main:create_education' %}" class="button">+ Add education</a>
             </div>
 
             {% if education_list %} <!-- mengecek apakah ada data education yg dikirim dari views.py -->
@@ -50,6 +56,15 @@
                                 </p>
                         </div>
                     </details>
+
+                    <div class="education-actions" style="margin-top: 15px; display: flex; justify-content: flex-end; gap: 8px;">
+                        <a href="{% url 'main:edit_education' edu.id %}" class="button" style="padding: 6px 14px; font-size: 13px;">Edit</a>
+            
+                        <form method="post" action="{% url 'main:delete_education' edu.id %}" style="margin: 0;" onsubmit="return confirm('Apakah kamu yakin ingin menghapus data ini?');">
+                            {% csrf_token %}
+                            <button type="submit" class="button button-secondary" style="padding: 6px 14px; font-size: 13px; color: #fff; background-color: #b91c1c; border: none;">Delete</button>
+                        </form>
+                    </div>
                 </div>
             {% endfor %}
 

@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from main.models import Experience, Education, Project
-from main.forms import ProjectForm
+from main.forms import ProjectForm, EducationForm
 
 
 def show_main(request): # untuk main page aka Profile
@@ -28,12 +28,65 @@ def show_experience(request): # untuk Experience page
     return render(request, "experience.html", context)
 
 def show_education(request): # untuk Education page
-    education_list = Education.objects.all()
+    # mengambil data dari response JSON
+    json_response = get_education_json(request)
+    educations = serializers.deserialize("json", json_response.content.decode("utf-8"))
+    education_list= [edu.object for edu in educations]
+
     context = {
         'name': 'Nasywa Namira Suhendro',
         'education_list': education_list
     }
     return render(request, "education.html", context)
+
+def get_education_json(request):
+    # mengambil data dalam format JSON
+    educations = Education.objects.all()
+    educations_json = serializers.serialize("json", educations)
+    return HttpResponse(educations_json, content_type="application/json")
+
+def create_education(request): # untuk add education
+    form = EducationForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save() # simpan value yg dimasukkan pengguna
+        messages.success(request, "Riwayat pendidikan baru berhasil ditambahkan!")
+        return redirect("main:show_education")
+
+    context = {
+        "name": "Nami",
+        "form": form,
+        "action_title":"Add New Education",
+        "button_text": "Tambah Education",
+    }
+    return render(request, "education_form.html", context)
+
+def edit_education(request):
+    # update data menggunakan form
+    education = get_object_or_404(Education, pk=id)
+    form = EducationForm(request.POST or None, instance=education)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Riwayat pendidikan berhasil diperbarui!")
+        return redirect("main:show_education")
+
+    context = {
+        "name": "Nasywa Namira Suhendro",
+        "form": form,
+        "action_title": "Edit Education",
+        "button_text": "Simpan Perubahan",
+    }
+    return render(request, "education_form.html", context)
+
+def delete_education(request, id):
+    # delete data
+    education = get_object_or_404(Education, pk=id)
+    if request.method == "POST":
+        education.delete()
+        messages.success(request, "Riwayat pendidikan berhasil dihapus!")
+        return redirect("main:show_education")
+    return redirect("main:show_education")
 
 def create_project(request):
     form = ProjectForm(request.POST or None) # digunakan untuk mentrigger class
