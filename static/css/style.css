@@ -928,3 +928,52 @@ details[open] .exp-summary::before {
         text-align: center;
     }
 }
+
+/* Styling tombol utama mengikuti tema navbar */
+.btn-nav-style {
+    display: inline-block;
+    background-color: #c9f992;
+    color: #1e3a1e;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 24px;
+    border-radius: 9999px; /* bentuk pill rounded seperti navbar */
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    transition: all 0.25s ease-in-out;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Efek hover melayang & sedikit membesar */
+.btn-nav-style:hover {
+    background-color: #bbf576;
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 16px rgba(100, 180, 50, 0.25);
+}
+
+/* Efek saat diklik */
+.btn-nav-style:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* Styling tombol delete */
+.btn-delete-style {
+    background-color: #fee2e2;
+    color: #991b1b;
+    font-weight: 600;
+    border: 1px solid #fecaca;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+}
+
+.btn-delete-style:hover {
+    background-color: #dc2626;
+    color: #ffffff;
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.25);
+}
+
+.btn-delete-style:active {
+    transform: translateY(0) scale(0.98);
+}
