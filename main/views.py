@@ -61,7 +61,7 @@ def create_education(request): # untuk add education
     }
     return render(request, "education_form.html", context)
 
-def edit_education(request):
+def edit_education(request, id):
     # update data menggunakan form
     education = get_object_or_404(Education, pk=id)
     form = EducationForm(request.POST or None, instance=education)

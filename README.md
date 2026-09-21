@@ -64,3 +64,30 @@ Saya menggunakan prompt secara bertahap dan interaktif dengan melampirkan screen
 3. Membantu menyusun unit test
 - Keterbatasan AI & Perbaikan Mandiri:
 1. AI sempat keliru mengasumsikan nama field untuk institusi pendidikan sebagai `title` (mengikuti pola model sebelumnya), yang ternyata memicu `FieldError`. Saya kemudian mengecek kembali model saya dan menyadari bahwa nama field yang benar adalah `school`, lalu memperbaikinya secara mandiri di shell.
+
+### Tugas 3
+
+## Deskripsi Proyek Tugas 3
+Pada Tugas 3 ini, saya mengimplementasikan penggunaan skeleton template html untuk menambahkan projects menggunakan form, menghapus projects, menyajikan data projects, dan mengedit data projects ke halaman web yang dibungkus terlebih dahulu dalam format JSON. Saya melakukan refactoring untuk setiap berkas html yg memiliki struktur kode identik seperti `base.html`, `education.html`, `experience.html`, `projects.html`, dan `education.html`. dilakukan extend terhadap template utama dan menerapkan mekanisme form & data delivery utk bagian `Education`.
+
+## Pertanyaan Reflektif
+1. Penggunaan `ModelForm` pada Django jauh lebih efisien dibandingkan membuat form HTML secara manual karena kita tidak perlu lagi mendefinisikan elemen input, label, atau tipe data satu per satu dari awal. Django akan secara otomatis menurunkan konfigurasi form langsung dari model yg sudah kita buat di `models.py` (inherit), sekaligus menangani proses validasi data secara centralized melalui method `is_valid()` dan penyimpanan data ke database cukup dengan memanggil method `save()`. Selain itu, kita diwajibkan menyertakan tag `{% csrf_token %}` sebagai bentuk proteksi keamanan dari serangan CSRF (*Cross-Site Request Forgery*)
+2. Dalam pengembangan aplikasi web modern, format data JSON jauh lebih disukai dibandingkan XML karena struktur penulisannya yg jauh lebih ringkas dan ringan berbasih pasangan *key-value*. Hal ini membuat ukuran data yg dikirim melalui jaringan menjadi lebih kecil dan hemat *bandwidth* karena tidak memerlukan tag pembuka dan penutup yang berulang seperti pada XML. Selain itu, JSON secara alami merupakan turunan dari JavaScript, sehingga website maupun aplikasi modern dapat langsung memproses (*parse*) datanya dengan cepat tanpa memerlukan parser XML DOM tambahan yg rumit. lalu format JSON juga memiliki keterbacaan yang sangat baik bagi developer dan sudah menjadi format standay yg paling umum digunakan pada arsitektur REST API lintas platform.
+3. Alur yang terjadi saat mengembalikan data portofolio dalam bentuk JSON dimulai ketika web mengirimkan *request* ke URL rute JSON (misalnya `/education/json/`). URL tersebut kemudian ditangkap oleh `urls.py` dan diteruskan ke fungsi view terkait yg bertugas mengambil sekumpulan data riwayat portofolio dari database menggunakan ORM Django, menghasilkan data berupa *QuerySet*. Selanjutnya, *QuerySet* yang berisi objek model Python akan diproses menggunakan modul serializer bawaan Django untuk diubah bentuknya menjadi format teks raw JSON (`serializers.serialize("json", ...)`). Teks JSON ini kemudian dikembalikan oleh view ke web di dalam objek `HttpResponse` dengan tipe konten `application/json`. Proses *serialization* ini sangat penting karena data di dalam Django berbentuk objek Python yang kompleks dan berada di memori server, sehingga datanya harus diubah terlebih dahulu ke dalam format standar seperti JSON agar dapat dikirim melalui protokol HTTP dan dipahami oleh aplikasi klien.
+
+## AI Disclosure
+- Tool yang Digunakan: Google Gemini
+- Tautan Log / Sesi Percakapan: [Sesi Percakapan Gemini](https://share.gemini.google/QdmdCiNcqk9j)
+- Strategi Prompting:
+  Saya menggunakan pendekatan bertahap dan interaktif dengan meminta panduan untuk menyusun UI and UX design, melampirkan tangkapan layar kode, pesan *error* Django di web, serta terminal untuk meminta bantuan *debugging*. Saya mengarahkan AI untuk memandu penyusunan struktur CRUD secara runut, mendiagnosis akar penyebab *exception*, dan memberikan instruksi perbaikan kode tanpa merombak struktur templat yang sudah ada.
+
+- Bagian yang Dibantu AI:
+  1. Menyusun implementasi `EducationForm` di `forms.py` serta fungsi CRUD (`create_education`, `edit_education`, `delete_education`, dan `get_education_json`) di `views.py`.
+  2. Melakukan *debugging* pada `AttributeError: 'function' object has no attribute 'META'` akibat argumen `request` yang terlewat pada pemanggilan `render()` di *view*.
+  3. Mengatasi `TypeError: edit_education() got an unexpected keyword argument 'id'` dengan menyinkronkan parameter pada fungsi *view* dan rute URL.
+  4. Merapikan tata letak dan *styling* action button (`Edit`, `Delete`, serta `+ Add education`) menggunakan animasi transisi CSS agar matching dengan komponen *navbar*.
+
+- Keterbatasan AI & Perbaikan Mandiri:
+  1. AI sempat menyarankan penulisan blok `<style>` di dalam templat HTML dan merombak tata letak kartu secara berlebihan, namun saya memutuskan untuk tetap mempertahankan struktur kode awal templat saya dan memindahkan seluruh aturan gaya ke berkas `style.css`.
+  2. Perubahan gaya pada tombol sempat tidak muncul akibat peramban memuat berkas CSS statis lama dari memori *cache*. Masalah ini diselesaikan secara mandiri melalui *hard refresh* (*empty cache*) pada peramban.
+  3. Sempat terjadi error sintaks tanda petik ganda (`""`) pada atribut tombol templat yang kemudian dikoreksi secara mandiri saat meninjau kembali berkas HTML.

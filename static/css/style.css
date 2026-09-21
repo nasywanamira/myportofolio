@@ -937,7 +937,7 @@ details[open] .exp-summary::before {
     font-weight: 600;
     font-size: 14px;
     padding: 10px 24px;
-    border-radius: 9999px; /* bentuk pill rounded seperti navbar */
+    border-radius: 8999px; /* bentuk pill rounded seperti navbar */
     text-decoration: none;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     transition: all 0.25s ease-in-out;

@@ -73,23 +73,23 @@ class EducationForm(ModelForm):
         widgets ={
             "school": TextInput( # digunakan untuk field teks satu baris
                 attrs={
-                    "placeholder": "Universitas Indonesia",
+                    "placeholder": "Nama institusi",
                     "maxlength": 255,
                 }   
             ),
             "degree": TextInput(
                 attrs={
-                    "placeholder": "S1 Sistem Informasi",
+                    "placeholder": "Jurusan yang ditempuh",
                 }
             ),
             "start_year": TextInput(
                 attrs={
-                    "placeholder": "2025"
+                    "placeholder": "Tahun masuk"
                 }
             ),
             "end_year": TextInput(
                 attrs={
-                    "placeholder": "2029"
+                    "placeholder": "Tahun lulus"
                 }
             ),
             "description": Textarea( # digunakan untuk field deskripsi yang membutuhkan area teks lebih besar
