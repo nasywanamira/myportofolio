@@ -10,7 +10,10 @@ from main.views import (show_main,
                         create_project, 
                         show_projects, 
                         get_projects_json, 
-                        delete_project)
+                        delete_project,
+                        register,
+                        login_user,
+                        logout_user, toggle_star)
 
 app_name = "main" # memberikan namespace pada URL milik aplikasi main.
 
@@ -31,6 +34,22 @@ urlpatterns = [
     path("projects/", show_projects, name="show_projects"),
     path("api/projects/", get_projects_json, name="get_projects_json"),
     path("projects/<uuid:project_id>/delete/",delete_project,name="delete_project"),
+
+    # Register
+    path("register/", register, name="register"),
+
+    # Login
+    path("login/", login_user, name="login"), # Nama URL main:login menunjuk ke view login_user
+
+    # Logout
+    path("logout/", logout_user, name="logout"), # main:logout menunjuk ke logout_user
+
+    # Toggle star
+    path(
+        "projects/<uuid:project_id>/star/",
+        toggle_star,
+        name="toggle_star",
+    ),
 ]
 
 # Pola URL "" berarti halaman utama aplikasi tanpa tambahan path.

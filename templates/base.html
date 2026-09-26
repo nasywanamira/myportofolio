@@ -23,6 +23,14 @@
                 <a href="{% url 'main:show_experience' %}">Experience</a>
                 <a href="{% url 'main:show_education' %}">Education</a>
                 <a href="{% url 'main:show_projects' %}">Projects</a>
+                <!-- Variabel user tersedia melalui auth context processor -->
+                {% if user.is_authenticated %} <!-- Pengunjung yang belum login mendapat AnonymousUser, dengan is_authenticated bernilai False -->
+                    <span class="nav-user">{{ user.username }}</span> <!-- { name } adalah nama pemilik portofolio, sedangkan { user.username } adalah akun yang sedang mengaksesnya -->
+                    <a href="{% url 'main:logout' %}">Logout</a>
+                {% else %}
+                    <a href="{% url 'main:login' %}">Login</a> <!-- Sesudah login, navbar menampilkan username akun dan tautan Logout -->
+                    <a href="{% url 'main:register' %}">Register</a>
+                {% endif %}
             </nav>
         </div>
     </header>
