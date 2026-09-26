@@ -12,6 +12,10 @@ from main.models import Experience, Education, Project
 from main.forms import ProjectForm, EducationForm
 
 
+def is_editor(user): # True kalo user bagian dari Editor
+    return user.groups.filter(name="Editor").exists()
+
+
 def show_main(request): # untuk main page aka Profile
     last_login = request.COOKIES.get('last_login', 'Belum ada sesi login / Cookie tidak ditemukan')
     context = {
@@ -131,6 +135,7 @@ def show_projects(request):
         "name": "Nami",
         "project_list": projects,
         "title_query": title_query,
+        "is_editor": request.user.is_authenticated and is_editor(request.user),
     }
     return render(request, "project.html", context)
 
@@ -224,3 +229,27 @@ def toggle_star(request, project_id):
 # Fungsi ini memakai @login_required tanpa pemeriksaan is_superuser. Pengguna terdaftar mana pun boleh memberi star; yang tidak boleh hanya pengunjung yang belum punya akun.
 # project.starred_by.add(...) dan .remove(...) menambah dan menghapus baris di tabel penghubung. Memanggil .add() dua kali untuk pengguna yang sama tidak membuat data ganda.
 # Pemeriksaan request.method == "POST" memastikan data hanya berubah lewat pengiriman form, bukan karena alamatnya kebetulan dibuka di browser.
+
+
+@login_required(login_url="/login/")
+def update_project(request, project_id):
+    # Editor boleh mengubah data project tp ga boleh add/delete
+    if not (request.user.is_superuser or is_editor(request.user)):
+        raise PermissionDenied
+
+    project = get_object_or_404(Project, pk=project_id)
+    form = ProjectForm(request.POST or None, instance=project)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Proyek berhasil diperbarui!")
+        return redirect("main:show_projects")
+
+    context = {
+        "name": "Nami",
+        "form": form,
+        "project": project,
+        "action_title": "Edit Project",
+        "button_text": "Simpan Perubahan",
+    }
+    return render(request, "projects_form.html", context)

@@ -13,7 +13,7 @@ from main.views import (show_main,
                         delete_project,
                         register,
                         login_user,
-                        logout_user, toggle_star)
+                        logout_user, toggle_star, update_project)
 
 app_name = "main" # memberikan namespace pada URL milik aplikasi main.
 
@@ -34,6 +34,7 @@ urlpatterns = [
     path("projects/", show_projects, name="show_projects"),
     path("api/projects/", get_projects_json, name="get_projects_json"),
     path("projects/<uuid:project_id>/delete/",delete_project,name="delete_project"),
+    path("projects/<uuid:project_id>/edit/", update_project, name="update_project"),
 
     # Register
     path("register/", register, name="register"),
