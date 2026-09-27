@@ -11,9 +11,11 @@
             </div>
 
             <!-- tombol add education -->
+            {% if user.is_superuser %}
              <div style="text-align: center; margin: 24px 0 32px;">
                 <a href="{% url 'main:create_education' %}" class="btn-nav-style">+ Add education</a>
             </div>
+            {% endif %}
 
             {% if education_list %} <!-- mengecek apakah ada data education yg dikirim dari views.py -->
             <div class="education-grid">
@@ -57,6 +59,7 @@
                     </details>
 
                     <!-- Edit education -->
+                    {% if user.is_superuser %}
                     <div class="education-actions" style="margin-top: 15px; display: flex; justify-content: flex-end; gap: 10px;">
                         <a href="{% url 'main:edit_education' edu.id %}" class="btn-nav-style" style="padding: 6px 14px; font-size: 13px;">Edit</a>
                         
@@ -66,6 +69,7 @@
                             <button type="submit" class="btn-delete-style" style="padding: 6px 14px; font-size: 13px;">Delete</button>
                         </form>
                     </div>
+                    {% endif %}
                 </div>
             {% endfor %}
 
