@@ -91,3 +91,23 @@ Pada Tugas 3 ini, saya mengimplementasikan penggunaan skeleton template html unt
   1. AI sempat menyarankan penulisan blok `<style>` di dalam templat HTML dan merombak tata letak kartu secara berlebihan, namun saya memutuskan untuk tetap mempertahankan struktur kode awal templat saya dan memindahkan seluruh aturan gaya ke berkas `style.css`.
   2. Perubahan gaya pada tombol sempat tidak muncul akibat peramban memuat berkas CSS statis lama dari memori *cache*. Masalah ini diselesaikan secara mandiri melalui *hard refresh* (*empty cache*) pada peramban.
   3. Sempat terjadi error sintaks tanda petik ganda (`""`) pada atribut tombol templat yang kemudian dikoreksi secara mandiri saat meninjau kembali berkas HTML.
+
+
+### Tugas 4
+  
+## AI Disclosure
+- Tool yang Digunakan: Google Gemini
+- Tautan Log / Sesi Percakapan: [Sesi Percakapan Gemini](https://share.gemini.google/6ve8xLVrQDRQ)
+- Strategi Prompting:
+  Saya memanfaatkan AI sebagai pendamping belajar (*study buddy*) dan konsultan interaktif sepanjang pengerjaan tugas. Saya menggunakan pendekatan diskusi bertahap dengan menunjukkan tangkapan layar desktop untuk meminta masukan perbaikan visual, validasi alur logika autentikasi, serta memastikan implementasi peran berjalan sesuai panduan tugas tanpa mengabaikan aspek estetika desain.
+
+- Bagian yang Dibantu AI:
+  1. Konsultasi dan panduan penyesuaian desain antarmuka (*UI styling*) pada komponen navigation bar
+  2. Memberikan saran perbaikan layout (*mobile layout*) menggunakan media query CSS agar elemen navbar dan content card tetap rapi di layar ponsel.
+  3. Memandu alur pemahaman konsep otorisasi berbasis peran (pembedaan hak akses antara pengunjung umum, pengguna biasa, peran Editor melalui Django Group, dan superuser).
+  4. Diskusi penataan visibilitas elemen antarmuka (tombol aksi pada kartu proyek) agar hanya tampil sesuai peran pengguna yang aktif.
+
+- Keterbatasan AI & Perbaikan Mandiri:
+  1. AI sempat memberikan asumsi keliru mengenai fitur yang belum terpasang, sehingga saya melakukan pengecekan mandiri pada basis kode untuk memvalidasi fungsionalitas yang sebenarnya sudah aktif.
+  2. Rekomendasi struktur penulisan kelas CSS dari AI disaring dan disederhanakan kembali secara mandiri agar tetap ringkas serta tidak merombak hierarki templat yang sudah ada.
+  3. Mengatasi kendala pembaruan visual statis yang tertahan memori singgahan (*browser cache*) secara mandiri melalui *hard refresh*.
