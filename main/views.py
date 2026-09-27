@@ -58,7 +58,11 @@ def get_education_json(request):
     educations_json = serializers.serialize("json", educations)
     return HttpResponse(educations_json, content_type="application/json")
 
+@login_required(login_url="/login/")
 def create_education(request): # untuk add education
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     form = EducationForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
@@ -74,7 +78,11 @@ def create_education(request): # untuk add education
     }
     return render(request, "education_form.html", context)
 
+@login_required(login_url="/login/")
 def edit_education(request, id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     # update data menggunakan form
     education = get_object_or_404(Education, pk=id)
     form = EducationForm(request.POST or None, instance=education)
@@ -92,7 +100,11 @@ def edit_education(request, id):
     }
     return render(request, "education_form.html", context)
 
+@login_required(login_url="/login/")
 def delete_education(request, id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     # delete data
     education = get_object_or_404(Education, pk=id)
     if request.method == "POST":
