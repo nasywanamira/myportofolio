@@ -94,6 +94,10 @@ Pada Tugas 3 ini, saya mengimplementasikan penggunaan skeleton template html unt
 
 
 ### Tugas 4
+
+## Deskripsi Tugas 4
+Pada Tugas 4 ini, saya mengimplementasikan sistem autentikasi, manajemen sesi (*session*), penggunaan *cookies*, serta otorisasi berbasis peran (*role-based access control*) ke dalam portofolio web saya. Pengguna kini dapat mendaftar melalui form registrasi, masuk menggunakan form *login*, dan keluar melalui *logout*. Informasi sesi seperti waktu login terakhir dicatat dan ditampilkan pada antarmuka pengguna. 
+Selain itu, saya menerapkan pembagian hak akses menjadi empat tingkatan peran: pengunjung tanpa login, pengguna biasa, peran Editor yang ditetapkan melalui Django Group, dan pemilik portofolio (*superuser*). Di sisi *backend*, saya menerapkan *server-side validation* yang menolak akses tidak valid dengan respons HTTP 403 Forbidden. Di sisi tampilan (*frontend*), visibilitas action button pada kartu project disesuaikan secara kondisional: peran Editor hanya diizinkan untuk mengubah (*edit*) data, pemilik portofolio memiliki akses penuh untuk menambah, mengedit, dan menghapus project, serta seluruh pengguna yang telah terautentikasi dapat memberikan maupun membatalkan bintang (*star*). Saya juga menyempurnakan *styling* navigasi dan tata letak responsif (*mobile layout*) agar antarmuka tetap rapi di berbagai ukuran layar.
   
 ## AI Disclosure
 - Tool yang Digunakan: Google Gemini
