@@ -1,6 +1,6 @@
 from django.urls import path
 
-from main.views import (show_main, 
+from main.views import (create_project_ajax, show_main, 
                         show_experience, 
                         show_education, 
                         get_education_json,
@@ -51,6 +51,9 @@ urlpatterns = [
         toggle_star,
         name="toggle_star",
     ),
+
+    # project AJAX
+    path("projects/add-ajax/", create_project_ajax, name="create_project_ajax"),
 ]
 
 # Pola URL "" berarti halaman utama aplikasi tanpa tambahan path.
