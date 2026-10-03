@@ -21,17 +21,7 @@
                         </button>
                 {% endif %} 
                 </div>
-                <form method="get"
-                      action="{% url 'main:show_projects' %}"
-                      class="project-search">
-                    <input type="search"
-                           name="title"
-                           value="{{ title_query }}"
-                           placeholder="Cari berdasarkan nama proyek"
-                           class="project-search__input"
-                           aria-label="Cari berdasarkan nama proyek">
-                    <button type="submit" class="button">Cari</button>
-                </form>
+    
                 <div class="experience-grid project-grid">
                     <form id="project-search-form" class="project-search">
                     <input type="search"

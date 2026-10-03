@@ -1,6 +1,6 @@
 from django.urls import path
 
-from main.views import (create_project_ajax, show_main, 
+from main.views import (create_education_ajax, create_project_ajax, show_main, 
                         show_experience, 
                         show_education, 
                         get_education_json,
@@ -13,7 +13,7 @@ from main.views import (create_project_ajax, show_main,
                         delete_project,
                         register,
                         login_user,
-                        logout_user, toggle_star, update_project)
+                        logout_user, toggle_star, toggle_star_education, update_project)
 
 app_name = "main" # memberikan namespace pada URL milik aplikasi main.
 
@@ -49,11 +49,15 @@ urlpatterns = [
     path(
         "projects/<uuid:project_id>/star/",
         toggle_star,
-        name="toggle_star",
+        name="toggle_star", # toggle star di Project field
     ),
+    path("education/<int:id>/star/", toggle_star_education, name="toggle_star_education"), # toggle star di Education field
 
     # project AJAX
     path("projects/add-ajax/", create_project_ajax, name="create_project_ajax"),
+
+    # education AJAX
+    path("education/add-ajax/", create_education_ajax, name="create_education_ajax"),
 ]
 
 # Pola URL "" berarti halaman utama aplikasi tanpa tambahan path.

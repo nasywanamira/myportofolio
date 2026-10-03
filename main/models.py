@@ -27,6 +27,9 @@ class Education(models.Model): # page Education
     description = models.TextField()
     logo = models.CharField(max_length=255, blank=True, null=True)
 
+    starred_by = models.ManyToManyField(
+        User, related_name="starred_educations", blank=True
+    )
     def __str__(self):
         return self.school
 
@@ -39,7 +42,7 @@ class Project(models.Model):
     project_image_url = models.URLField(blank=True, max_length=500)
 
     starred_by = models.ManyToManyField(
-        User, related_name="stared_projects", blank=True
+        User, related_name="starred_projects", blank=True
     )
 
 # ManyToManyField dipakai karena satu proyek bisa di-star banyak pengguna, dan satu pengguna bisa mem-star banyak proyek. Django membuat tabel penghubungnya sendiri di belakang layar.

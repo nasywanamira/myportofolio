@@ -42,22 +42,46 @@ def show_experience(request): # untuk Experience page
     return render(request, "experience.html", context)
 
 def show_education(request): # untuk Education page
-    # mengambil data dari response JSON
-    json_response = get_education_json(request)
-    educations = serializers.deserialize("json", json_response.content.decode("utf-8"))
-    education_list= [edu.object for edu in educations]
+    school_query = request.GET.get("school", "").strip()
 
     context = {
         'name': 'Nasywa Namira Suhendro',
-        'education_list': education_list
+        'school_query': school_query,
+        'form': EducationForm(),
+
     }
     return render(request, "education.html", context)
 
 def get_education_json(request):
     # mengambil data dalam format JSON
-    educations = Education.objects.all()
-    educations_json = serializers.serialize("json", educations)
-    return HttpResponse(educations_json, content_type="application/json")
+    school_query = request.GET.get("school", "").strip()
+    educations = Education.objects.prefetch_related('starred_by').all()
+
+    if school_query:
+        educations = educations.filter(school__icontains=school_query)
+
+    # Konstruksi data JSON secara manual agar bisa menyisipkan logic Star
+    data = []
+    for education in educations:
+        starred_users = education.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
+
+        data.append({
+            "pk": str(education.id),
+            "fields": {
+                "school": education.school,
+                "degree": education.degree,
+                "start_year": education.start_year,
+                "end_year": education.end_year,
+                "description": education.description,
+                "logo": education.logo or "",
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+    return JsonResponse(data, safe=False)
 
 @login_required(login_url="/login/")
 def create_education(request): # untuk add education
@@ -257,6 +281,18 @@ def toggle_star(request, project_id):
 # project.starred_by.add(...) dan .remove(...) menambah dan menghapus baris di tabel penghubung. Memanggil .add() dua kali untuk pengguna yang sama tidak membuat data ganda.
 # Pemeriksaan request.method == "POST" memastikan data hanya berubah lewat pengiriman form, bukan karena alamatnya kebetulan dibuka di browser.
 
+@login_required(login_url="/login/")
+def toggle_star_education(request, id):
+    education = get_object_or_404(Education, pk=id)
+
+    if request.method == "POST":
+        # klo akun ini udh pernah ngasih star, batalkan star
+        # kalo belom, tambahkan star
+        if request.user in education.starred_by.all():
+            education.starred_by.remove(request.user)
+        else:
+            education.starred_by.add(request.user)
+    return redirect("main:show_education")
 
 @login_required(login_url="/login/")
 def update_project(request, project_id):
@@ -304,3 +340,21 @@ def create_project_ajax(request):
 # Di sini kita tidak memakai @login_required. Dekorator itu membalas pengunjung yang belum login dengan redirect ke halaman login, dan fetch akan mengikuti redirect tersebut lalu menerima halaman HTML login dengan status 200 sehingga JavaScript kita tidak bisa mengenali kegagalannya. Karena AnonymousUser juga memiliki is_superuser bernilai False, satu pemeriksaan di atas sudah menolak baik pengunjung yang belum login maupun pengguna biasa dengan respons JSON 403 yang mudah dibaca JavaScript.
 # Kita memakai kembali ProjectForm alih-alih membuat objek Project langsung dari request.POST. Dengan begitu, semua validasi yang sudah ada (field wajib, panjang maksimum, format URL) tetap berlaku untuk permintaan AJAX.
 # Status 201 Created menandakan data baru berhasil dibuat, sedangkan 400 Bad Request dikirim bersama pesan kesalahan tiap field dari form.errors.get_json_data(), misalnya {"title": [{"message": "This field is required.", "code": "required"}]}.
+
+
+@require_POST
+def create_education_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan pendidikan."},
+            status=403,
+        )
+
+    form = EducationForm(request.POST)
+    if form.is_valid():
+        education = form.save()
+        return JsonResponse(
+            {"message": "Pendidikan berhasil ditambahkan.", "pk": str(education.id)},
+            status=201,
+        )
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
