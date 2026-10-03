@@ -214,7 +214,7 @@
     });
 
     searchForm.addEventListener('submit', function (event) {
-        event.preventDefault();
+        event.preventDefault(); // mencegah browser mengirim form dengan cara biasa (yang akan me-reload halaman). Pengiriman diambil alih sepenuhnya oleh fetch.
         clearTimeout(searchDebounceTimer);
         searchEducations();
     });
@@ -229,7 +229,7 @@
             const response = await fetch(CREATE_EDUCATION_ENDPOINT, {
                 method: 'POST',
                 headers: { 'X-CSRFToken': getCookie('csrftoken') },
-                body: new FormData(educationForm),
+                body: new FormData(educationForm), // mengumpulkan seluruh isi input di dalam form berdasarkan atribut name-nya.
             });
             const result = await response.json().catch(() => ({}));
 

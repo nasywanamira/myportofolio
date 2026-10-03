@@ -1297,3 +1297,26 @@ details[open] .exp-summary::before {
     border-color: var(--line);
     box-shadow: 0 0 0 2px rgba(232, 20, 101, 0.2);
 }
+
+/* Perbaikan layout search bar & grid projects */
+.project-grid {
+    display: block !important;
+}
+
+#project-search-form {
+    display: flex !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+    margin-bottom: 1.5rem !important;
+}
+
+#project-search-form input[type="search"] {
+    flex: 1 !important;
+    width: 100% !important;
+}
+
+#grid.project-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1.25rem !important;
+}

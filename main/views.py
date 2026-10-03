@@ -342,7 +342,7 @@ def create_project_ajax(request):
 # Status 201 Created menandakan data baru berhasil dibuat, sedangkan 400 Bad Request dikirim bersama pesan kesalahan tiap field dari form.errors.get_json_data(), misalnya {"title": [{"message": "This field is required.", "code": "required"}]}.
 
 
-@require_POST
+@require_POST # membuat view ini hanya menerima metode POST. Permintaan dengan metode lain langsung dibalas 405 Method Not Allowed.
 def create_education_ajax(request):
     if not request.user.is_superuser:
         return JsonResponse(
