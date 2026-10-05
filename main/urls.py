@@ -25,7 +25,7 @@ urlpatterns = [
     # Education
     path("education/", show_education, name="show_education"), # education
     path("education/create/", create_education, name="create_education"),
-    path("api/education/", get_education_json, name="get_education_json"),
+    path("api/education/", get_education_json, name="get_education_json"), # endpoint JSON buat fetch()
     path('education/edit/<int:id>/', edit_education, name='edit_education'),
     path('education/delete/<int:id>/', delete_education, name='delete_education'),
 
@@ -52,11 +52,12 @@ urlpatterns = [
         name="toggle_star", # toggle star di Project field
     ),
     path("education/<int:id>/star/", toggle_star_education, name="toggle_star_education"), # toggle star di Education field
+    # toggle star pakai <int:id>, bukan <uuid:id>, karena model Education pakai ID integer
 
     # project AJAX
     path("projects/add-ajax/", create_project_ajax, name="create_project_ajax"),
 
-    # education AJAX
+    # education AJAX: endpoint POST yang dipanggil dari modal
     path("education/add-ajax/", create_education_ajax, name="create_education_ajax"),
 ]
 

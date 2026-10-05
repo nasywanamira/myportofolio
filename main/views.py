@@ -42,21 +42,26 @@ def show_experience(request): # untuk Experience page
     return render(request, "experience.html", context)
 
 def show_education(request): # untuk Education page
+    # cuma ngerender kerangka halaman. Datanya sengaja nggak dikirim
+    # lewat context, karena sekarang diambil browser sendiri lewat fetch() ke get_education_json
     school_query = request.GET.get("school", "").strip()
 
     context = {
         'name': 'Nasywa Namira Suhendro',
-        'school_query': school_query,
-        'form': EducationForm(),
+        'school_query': school_query, # biar kata kunci dari ?school= tetap terisi di kolom search
+        'form': EducationForm(), # form kosong, cuma buat di-render di dalam modal
 
     }
     return render(request, "education.html", context)
 
 def get_education_json(request):
+    # Endpoint JSON yang dipanggil fetch() dari education.html (bisa diakses semua peran, termasuk pengunjung)
     # mengambil data dalam format JSON
     school_query = request.GET.get("school", "").strip()
+    # prefetch_related('starred_by') supaya data star diambil sekaligus, bukan 1 query per education (N+1)
     educations = Education.objects.prefetch_related('starred_by').all()
 
+    # search AJAX: filter berdasarkan nama institusi, icontains = nggak peduli huruf besar/kecil
     if school_query:
         educations = educations.filter(school__icontains=school_query)
 
@@ -64,23 +69,25 @@ def get_education_json(request):
     data = []
     for education in educations:
         starred_users = education.starred_by.all()
+        # pengunjung yang belum login otomatis dianggap belum nge-star
         is_starred = request.user in starred_users if request.user.is_authenticated else False
         starred_by_names = ", ".join([u.username for u in starred_users])
 
         data.append({
-            "pk": str(education.id),
+            "pk": str(education.id), # dijadiin string biar aman dipakai di JS (buat bikin URL star & delete)
             "fields": {
                 "school": education.school,
                 "degree": education.degree,
                 "start_year": education.start_year,
                 "end_year": education.end_year,
                 "description": education.description,
-                "logo": education.logo or "",
+                "logo": education.logo or "",  # logo boleh kosong (null), diganti "" biar JS nggak nampilin "null"
                 "star_count": starred_users.count(),
                 "is_starred": is_starred,
                 "starred_by_names": starred_by_names,
             }
         })
+        # safe=False karena yang dikirim berupa list, bukan dict
     return JsonResponse(data, safe=False)
 
 @login_required(login_url="/login/")
@@ -344,17 +351,21 @@ def create_project_ajax(request):
 
 @require_POST # membuat view ini hanya menerima metode POST. Permintaan dengan metode lain langsung dibalas 405 Method Not Allowed.
 def create_education_ajax(request):
+    # pengecekan ini sudah nolak pengunjung & user biasa dengan JSON 403.
     if not request.user.is_superuser:
         return JsonResponse(
             {"message": "Hanya pemilik portofolio yang dapat menambahkan pendidikan."},
             status=403,
         )
-
+    
+    # pakai EducationForm lagi biar validasi (field wajib, panjang maks) + strip_tags tetap berlaku
     form = EducationForm(request.POST)
     if form.is_valid():
         education = form.save()
         return JsonResponse(
             {"message": "Pendidikan berhasil ditambahkan.", "pk": str(education.id)},
-            status=201,
+            status=201,# 201 Created = data baru berhasil dibuat
         )
+        
+    # 400 Bad Request + pesan error per field, nanti ditampilin JS lewat toast
     return JsonResponse({"errors": form.errors.get_json_data()}, status=400)

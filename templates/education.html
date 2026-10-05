@@ -11,16 +11,20 @@
             </div>
 
             <!-- tombol add education -->
+            <!-- popovertarget nyambungin tombol ke elemen dengan id add-education-modal, tanpa JS tambahan -->
             {% if user.is_superuser %}
              <div style="text-align: center; margin: 24px 0 32px;">
                 <button type="button"
                         class="button edu-add-button"
+                        </button>
                         popovertarget="add-education-modal">
                     <span aria-hidden="true">+</span>
                     Add Education
                 </button>
             </div>
             {% endif %}
+
+            <!-- form search: nggak ada method/action karena submit-nya diambil alih JavaScript -->
                 <form id="education-search-form" class="education-search">
                     <input type="search"
                            id="search-input"
@@ -31,6 +35,7 @@
                            aria-label="Cari berdasarkan nama institusi">
                     <button type="submit" class="button">Cari</button>
                 </form>
+                <!-- Loading / Error / Empty state: disembunyikan default pakai class "hide", dimunculin lewat displayPageSection() -->
 
                 <!-- Loading State -->
                 <div id="loading" class="empty-state hide">
@@ -54,6 +59,7 @@
     </section>
 </main>
 
+<!-- modal cuma di-include untuk superuser, jadi buat user lain elemennya NGGAK ADA di halaman -->
 {% if user.is_superuser %}
     {% include "components/education_form_modal.html" %}
 {% endif %}
@@ -62,10 +68,11 @@
     // ===== Konfigurasi =====
     const BASE_EDUCATION_ENDPOINT = "{% url 'main:get_education_json' %}";
     const CREATE_EDUCATION_ENDPOINT = "{% url 'main:create_education_ajax' %}";
+    // Django -> JS: dirender jadi string "true"/"false" lalu dibandingkan, hasilnya boolean
     const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
-    const SEARCH_DEBOUNCE_DELAY = 300;
-    let educationAbortController;
-    let searchDebounceTimer;
+    const SEARCH_DEBOUNCE_DELAY = 300; // browser nunggu 300 ms setelah ketikan terakhir
+    let educationAbortController; // buat membatalkan request lama yang belum selesai
+    let searchDebounceTimer; // nyimpen id timer debounce
 
     // ===== Elemen DOM =====
     const loadingState = document.getElementById('loading');
@@ -77,6 +84,10 @@
     const educationForm = document.getElementById('education-form'); // null kalau bukan superuser
 
     // ===== Helper =====
+    // XSS: ubah karakter spesial HTML jadi entity sebelum disisipin ke innerHTML,
+    // jadi <img onerror=...> tampil sebagai teks biasa, bukan ke-eksekusi.
+    // "&" harus diganti paling awal biar hasil replace karakter lain nggak ikut ke-replace lagi.
+    // ?? '' ngubah null/undefined jadi string kosong
     function escapeHtml(value) {
         return String(value ?? '')
             .replaceAll('&', '&amp;')
@@ -86,6 +97,7 @@
             .replaceAll("'", '&#39;');
     }
 
+    // Baca cookie berdasarkan nama, dipakai buat ngambil token CSRF
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -100,6 +112,7 @@
         return cookieValue;
     }
 
+    // Tampilkan SATU bagian halaman (loading/error/kosong/grid), sisanya disembunyikan lewat class "hide"
     function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
         loadingState.classList.toggle('hide', !showLoading);
         errorState.classList.toggle('hide', !showError);
@@ -107,23 +120,28 @@
         gridContainer.classList.toggle('hide', !showGrid);
     }
 
+    // Tutup modal tambah education (Popover API). Dipanggil setelah data berhasil disimpan.
+    // Dicek null dulu biar aman kalau modalnya nggak ada (bukan superuser).
     function closeEducationModal() {
         const modal = document.getElementById('add-education-modal');
         if (modal) modal.hidePopover();
     }
 
     // ===== Render card =====
+    // Terima 1 objek JSON education, lalu rakit jadi elemen <article> lengkap
     function buildEducationCardElement(item) {
         const education = item.fields;
         const educationId = item.pk;
 
         const articleElement = document.createElement('article');
         articleElement.className = 'experience-card';
-
+       
+        // logo opsional: kalau kosong, <img> nggak dibuat. Semua nilai teks di-escape.
         const imageHtml = education.logo
             ? `<img src="${escapeHtml(education.logo)}" alt="Logo ${escapeHtml(education.school)}" class="education-logo">`
             : '';
 
+        // kalau end_year kosong berarti masih berjalan
         const years = education.end_year
             ? `${escapeHtml(education.start_year)} - ${escapeHtml(education.end_year)}`
             : `${escapeHtml(education.start_year)} - Present`;
@@ -132,6 +150,7 @@
         const deleteUrl = "{% url 'main:delete_education' 0 %}".replace('/0/', `/${educationId}/`);
         const starUrl = "{% url 'main:toggle_star_education' 0 %}".replace('/0/', `/${educationId}/`);
 
+        // tombol hapus cuma dibuat untuk superuser (view-nya juga tetap ngecek hak akses)
         const deleteHtml = IS_SUPERUSER
             ? `<form method="post" action="${deleteUrl}" style="display:inline;">
                 {% csrf_token %}
@@ -139,10 +158,11 @@
             </form>`
             : '';
 
+        // status star dari JSON (jumlah + apakah user yang login sudah nge-star)
         const isStarredClass = education.is_starred ? " is-starred" : "";
         const starText = education.is_starred ? "Unstar" : "Star";
         const starTitle = education.star_count > 0
-            ? `Starred by ${escapeHtml(education.starred_by_names)}`
+            ? `Starred by ${escapeHtml(education.starred_by_names)}` // username juga di-escape
             : "Be the first to star this";
 
         articleElement.innerHTML = `
@@ -171,20 +191,24 @@
 
     // ===== Fetch list =====
     async function fetchEducations(searchQuery = "") {
+        // batalin request sebelumnya yang belum selesai, biar hasil lama nggak nimpa hasil terbaru
         if (educationAbortController) educationAbortController.abort();
         educationAbortController = new AbortController();
 
         try {
             displayPageSection({ showLoading: true });
 
+            // encodeURIComponent biar karakter spesial di kata kunci aman dipakai di URL
             const url = searchQuery
                 ? `${BASE_EDUCATION_ENDPOINT}?school=${encodeURIComponent(searchQuery)}`
                 : BASE_EDUCATION_ENDPOINT;
 
+             // await: tunggu server balas dulu sebelum lanjut ke baris berikutnya
             const response = await fetch(url, {
                 headers: { 'Accept': 'application/json' },
                 signal: educationAbortController.signal,
             });
+            // fetch() TIDAK error sendiri untuk status 4xx/5xx, jadi dicek manual lewat response.ok
             if (!response.ok) throw new Error('Failed to fetch data');
 
             const educationData = await response.json();
@@ -204,10 +228,13 @@
     }
 
     // ===== Search + debounce =====
+    // dipakai dua event handler di bawah biar logika pencarian nggak ditulis dua kali
     function searchEducations() {
         fetchEducations(searchInput.value.trim());
     }
 
+    // Debouncing: tiap ngetik, timer lama dibatalin lalu dimulai lagi dari awal.
+    // Pencarian baru jalan kalau user berhenti ngetik selama 300 ms (bukan 1 request per huruf).
     searchInput.addEventListener('input', function () {
         clearTimeout(searchDebounceTimer);
         searchDebounceTimer = setTimeout(searchEducations, SEARCH_DEBOUNCE_DELAY);
@@ -215,40 +242,44 @@
 
     searchForm.addEventListener('submit', function (event) {
         event.preventDefault(); // mencegah browser mengirim form dengan cara biasa (yang akan me-reload halaman). Pengiriman diambil alih sepenuhnya oleh fetch.
-        clearTimeout(searchDebounceTimer);
+        clearTimeout(searchDebounceTimer); // tombol Cari/Enter langsung jalan, timer yang nunggu dibatalin
         searchEducations();
     });
 
     // ===== Tambah education via AJAX =====
     async function addEducation(event) {
-        event.preventDefault();
+        event.preventDefault(); // pengiriman diambil alih fetch, halaman nggak reload
         const submitButton = educationForm.querySelector('button[type="submit"]');
-        submitButton.disabled = true;
+        submitButton.disabled = true; // cegah data kesimpan dobel kalau tombol diklik berkali-kali
 
         try {
             const response = await fetch(CREATE_EDUCATION_ENDPOINT, {
                 method: 'POST',
-                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                headers: { 'X-CSRFToken': getCookie('csrftoken') }, // token CSRF dari cookie, tanpa ini server balas 403
                 body: new FormData(educationForm), // mengumpulkan seluruh isi input di dalam form berdasarkan atribut name-nya.
             });
+             // .catch(() => ({})) buat jaga-jaga kalau balasannya bukan JSON (mis. halaman HTML 403 dari CSRF)
             const result = await response.json().catch(() => ({}));
 
             if (response.ok) {
+            // sukses (201): kosongin form, tutup modal, kasih toast, refresh list tanpa reload halaman
                 educationForm.reset();
                 closeEducationModal();
                 showToast('Berhasil', 'Riwayat pendidikan berhasil ditambahkan!', 'success');
-                fetchEducations(searchInput.value.trim());
+                fetchEducations(searchInput.value.trim()); // pakai kata kunci search yang lagi aktif
             } else {
+                // gagal (400/403): ambil pesan error dari server, tampilkan lewat toast merah
                 const errorMessages = result.errors
                     ? Object.values(result.errors).flat().map(error => error.message)
                     : [result.message || `Terjadi kesalahan (status ${response.status}).`];
                 showToast('Gagal menambahkan pendidikan', errorMessages.join(' '), 'error');
             }
         } catch (error) {
+            // masuk sini kalau request nggak sampai ke server (mis. server mati / koneksi putus)
             console.error('Error adding education:', error);
             showToast('Gagal menambahkan pendidikan', 'Tidak dapat terhubung ke server. Silakan coba lagi.', 'error');
         } finally {
-            submitButton.disabled = false;
+            submitButton.disabled = false; // tombol aktif lagi, baik sukses maupun gagal
         }
     }
 
@@ -261,6 +292,7 @@
     document.getElementById("add-education-modal").hidePopover(); // Fungsi ini menggunakan method Popover API yang sama dengan modal kita. Pada bagian selanjutnya, fungsi closeEducationModal() dipanggil setelah server berhasil menyimpan pendidikan lewat AJAX sehingga modal otomatis tertutup tanpa me-reload halaman.
 }
     // ===== Start =====
+    // muat data pertama kali begitu halaman dibuka
     fetchEducations(searchInput.value.trim());
 </script>
 

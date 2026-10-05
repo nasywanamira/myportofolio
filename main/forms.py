@@ -118,8 +118,12 @@ class EducationForm(ModelForm):
                 }
             ),
         }
+    # clean_<field> otomatis dipanggil Django saat form.is_valid().
+    # strip_tags membuang tag HTML sejak data masuk. Ini lapisan kedua,
+    # pertahanan utama tetap escapeHtml saat data ditampilkan di JS.
     def clean_school(self):
         school = strip_tags(self.cleaned_data["school"]).strip()
+        # kalau isinya cuma tag (mis. <img ...>), hasilnya kosong, jadi ditolak
         if not school:
             raise ValidationError("Nama institusi tidak boleh hanya berisi tag HTML.")
         return school
