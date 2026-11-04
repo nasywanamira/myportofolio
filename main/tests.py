@@ -71,8 +71,11 @@ class MainTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "education.html")
-        self.assertContains(response, self.education.school)
-        self.assertContains(response, self.education.degree)
+        self.assertContains(response, 'id="grid"')
+        data = self.client.get(reverse("main:get_education_json")).json()
+        fields = next(item["fields"] for item in data if item["pk"] == str(self.education.pk))
+        self.assertEqual(fields["school"], self.education.school)
+        self.assertEqual(fields["degree"], self.education.degree)
 
     def test_education_model(self):
         self.assertEqual(str(self.education), "Universitas Indonesia")
@@ -83,7 +86,9 @@ class MainTest(TestCase):
         response = self.client.get(reverse("main:show_education"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Belum ada riwayat pendidikan yang ditambahkan.")
+        self.assertContains(response, 'id="empty"')
+        data = self.client.get(reverse("main:get_education_json")).json()
+        self.assertEqual(data, [])
 
 
 # Semua method yang namanya diawali test_ akan dijalankan otomatis oleh Django. Method setUp() dijalankan sebelum setiap test sehingga tiap test memperoleh data awal yang bersih.
