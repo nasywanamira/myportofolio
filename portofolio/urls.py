@@ -6,6 +6,11 @@ urlpatterns = [
     path("", include("main.urls")),
 ]
 
+urlpatterns += [
+    path("api/v1/", include("main.api_urls")),
+    path("api-auth/", include("rest_framework.urls")),
+]
+
 # Fungsi include() meneruskan permintaan dengan awalan "" dari level proyek ke main/urls.py. 
 # Di sana, Django memilih view berdasarkan sisa path. 
 # Rute langsung ke landing_page dari Tutorial 1 digantikan oleh include("main.urls"), 

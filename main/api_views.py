@@ -1,0 +1,76 @@
+from django.shortcuts import get_object_or_404
+from rest_framework import status
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.decorators import (
+    api_view, authentication_classes, permission_classes,
+)
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+from main.models import Project
+from main.permissions import IsPortfolioOwnerOrReadOnly
+from main.serializers import ProjectSerializer
+
+
+@api_view(["GET", "HEAD", "POST"]) # membungkus fungsi menjadi API view DRF: ia menyediakan Request, renderer untuk Response, penanganan exception API, dan penolakan method yang tidak didaftarkan.
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsPortfolioOwnerOrReadOnly])
+# menentukan cara mengenali akun serta aturan akses. Tulis dekorator dalam urutan yang ditunjukkan.
+def project_list(request):
+    if request.method in ("GET", "HEAD"):
+        projects = Project.objects.prefetch_related("starred_by").order_by("title", "id")
+        title = request.query_params.get("title", "").strip()
+        if title:
+            projects = projects.filter(title__icontains=title)
+        serializer = ProjectSerializer(
+            projects, many=True, context={"request": request},
+        )
+        return Response(serializer.data)
+
+    serializer = ProjectSerializer(data=request.data, context={"request": request})
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+# request.query_params membaca parameter pencarian. title__icontains tetap memakai pola pencarian Django yang sudah kamu kenal. order_by membuat urutan hasil konsisten.
+# prefetch_related("starred_by") mengambil relasi star untuk sekumpulan proyek sehingga serializer tidak perlu mengambil daftar pemberi star berulang untuk setiap kartu.
+# Pada POST, request.data membaca input melalui parser DRF, termasuk JSON dan form. Ini berbeda dari request.POST yang dipakai pada form POST Django.
+# is_valid(raise_exception=True) menghentikan alur ketika input salah, dengan response 400 dan error per field. .save() hanya dijalankan ketika input valid.
+# Response(serializer.data, status=...) menerima data Python. Kita tidak perlu memanggil json.dumps atau menulis content_type secara manual.
+
+
+@api_view(["GET", "HEAD", "PUT", "PATCH", "DELETE"])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsPortfolioOwnerOrReadOnly])
+def project_detail(request, project_id):
+    project = get_object_or_404(
+        Project.objects.prefetch_related("starred_by"), pk=project_id,
+    )
+    if request.method in ("GET", "HEAD"):
+        serializer = ProjectSerializer(project, context={"request": request})
+        return Response(serializer.data)
+
+    if request.method == "DELETE":
+        project.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    serializer = ProjectSerializer(
+        project, data=request.data, partial=request.method == "PATCH",
+        context={"request": request},
+    )
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data)
+
+@api_view(["POST"])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
+def project_star(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+    if project.starred_by.filter(pk=request.user.pk).exists():
+        project.starred_by.remove(request.user)
+    else:
+        project.starred_by.add(request.user)
+    serializer = ProjectSerializer(project, context={"request": request})
+    return Response(serializer.data)
