@@ -1,7 +1,7 @@
 from django.utils.html import strip_tags
 from rest_framework import serializers
 
-from main.models import Project
+from main.models import Project, Education
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -38,6 +38,71 @@ class ProjectSerializer(serializers.ModelSerializer):
         if request is None or not request.user.is_authenticated:
             return False
         return request.user in obj.starred_by.all()
+
+    def get_starred_by_names(self, obj):
+        return ", ".join(user.username for user in obj.starred_by.all())
+
+
+class EducationSerializer(serializers.ModelSerializer):
+    star_count = serializers.SerializerMethodField()
+    is_starred = serializers.SerializerMethodField()
+    starred_by_names = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Education
+        fields = [
+            "id", "school", "degree", "start_year", "end_year", "description", "logo",
+            "star_count", "is_starred", "starred_by_names",
+        ]
+        read_only_fields = ["id"]
+
+    def validate_school(self, value):
+        value = strip_tags(value).strip()
+        if not value:
+            raise serializers.ValidationError("Nama institusi wajib diisi.")
+        return value
+
+    def validate_degree(self, value):
+        value = strip_tags(value).strip()
+        if not value:
+            raise serializers.ValidationError("Jurusan wajib diisi.")
+        return value
+
+    def validate_start_year(self, value):
+        value = strip_tags(value).strip()
+        if not value:
+            raise serializers.ValidationError("Tahun masuk wajib diisi.")
+        return value
+
+    def validate_end_year(self, value):
+        return strip_tags(value).strip() if value else value
+
+    def validate_description(self, value):
+        value = strip_tags(value).strip()
+        if not value:
+            raise serializers.ValidationError("Deskripsi wajib diisi.")
+        return value
+
+    def validate_logo(self, value):
+        if not value:
+            return value
+        value = strip_tags(value).strip()
+        if value.startswith("/") and not value.startswith(("//", "/\\")):
+            return value
+        from django.core.validators import URLValidator
+        from django.core.exceptions import ValidationError
+        try:
+            URLValidator(schemes=["http", "https"])(value)
+        except ValidationError:
+            raise serializers.ValidationError("Gunakan URL HTTP/HTTPS atau path lokal /.")
+        return value
+
+    def get_star_count(self, obj):
+        return obj.starred_by.count()
+
+    def get_is_starred(self, obj):
+        request = self.context.get("request")
+        return bool(request and request.user.is_authenticated and request.user in obj.starred_by.all())
 
     def get_starred_by_names(self, obj):
         return ", ".join(user.username for user in obj.starred_by.all())
