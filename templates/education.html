@@ -32,7 +32,8 @@
                            placeholder="Cari berdasarkan nama institusi"
                            class="education-search__input"
                            aria-label="Cari berdasarkan nama institusi">
-                    <button type="submit" class="button">Cari</button>
+                <button type="submit" class="button">Cari</button>
+                    <button type="button" id="education-clear-search" class="button">Reset</button>
                 </form>
                 <!-- Loading / Error / Empty state: disembunyikan default pakai class "hide", dimunculin lewat displayPageSection() -->
 
@@ -51,6 +52,7 @@
                     <p>Belum ada education yang ditambahkan atau ditemukan.</p>
                 </div>
 
+                <p id="education-result-count" role="status" aria-live="polite"></p>
                 <!-- Education Grid -->
                 <div id="grid" class="experience-grid education-grid hide"></div>
 
@@ -167,6 +169,7 @@
 
         try {
             displayPageSection({ showLoading: true });
+            document.getElementById('education-result-count').textContent = '';
 
             // encodeURIComponent biar karakter spesial di kata kunci aman dipakai di URL
             const url = searchQuery
@@ -182,6 +185,7 @@
             if (!response.ok) throw new Error('Failed to fetch data');
 
             const educationData = await response.json();
+            document.getElementById('education-result-count').textContent = `${educationData.length} pendidikan ditemukan`;
 
             if (educationData.length === 0) {
                 displayPageSection({ showEmpty: true });
@@ -320,6 +324,13 @@
         } finally {
             button.disabled = false;
         }
+    });
+
+        document.getElementById('education-clear-search').addEventListener('click', () => {
+        clearTimeout(searchDebounceTimer);
+        searchInput.value = '';
+        fetchEducations();
+        searchInput.focus();
     });
 
     // ===== Start =====
