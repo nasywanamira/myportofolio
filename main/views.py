@@ -50,7 +50,7 @@ def show_education(request): # untuk Education page
         'name': 'Nasywa Namira Suhendro',
         'school_query': school_query,
         'can_edit_education': request.user.is_superuser or (request.user.is_authenticated and is_editor(request.user)),
-        'edit_form': EducationForm(prefix='edit'),
+        'edit_form': EducationForm(auto_id='edit_%s'),
         'form': EducationForm(), # form kosong, cuma buat di-render di dalam modal
 
     }
