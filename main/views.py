@@ -48,7 +48,9 @@ def show_education(request): # untuk Education page
 
     context = {
         'name': 'Nasywa Namira Suhendro',
-        'school_query': school_query, # biar kata kunci dari ?school= tetap terisi di kolom search
+        'school_query': school_query,
+        'can_edit_education': request.user.is_superuser or (request.user.is_authenticated and is_editor(request.user)),
+        'edit_form': EducationForm(prefix='edit'),
         'form': EducationForm(), # form kosong, cuma buat di-render di dalam modal
 
     }
@@ -112,7 +114,7 @@ def create_education(request): # untuk add education
 
 @login_required(login_url="/login/")
 def edit_education(request, id):
-    if not request.user.is_superuser:
+    if not (request.user.is_superuser or is_editor(request.user)):
         raise PermissionDenied
     
     # update data menggunakan form

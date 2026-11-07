@@ -10,7 +10,7 @@
             <div class="container">
                 <h1>{{ action_title }}</h1>
                 <form method="post"
-                      action="{% url 'main:create_education' %}"
+                      action=""
                       class="project-form">
                     {% csrf_token %}
                     {% for field in form %}
