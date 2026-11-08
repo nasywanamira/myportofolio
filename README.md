@@ -151,3 +151,72 @@ Mitigasi yang saya terapkan ada dua lapis. Pertama di sisi klien setiap  nilai t
   2. Kode *template* dari AI memakai *class* generik yang tidak cocok dengan desain Education saya, sehingga tampilan awal berbeda. Saya menyesuaikan nama *class*, teks label, dan CSS secara mandiri agar konsisten dengan gaya portofolio.
   3. Sebagian perubahan sempat tertempel tidak lengkap sehingga halaman Education kosong. Saya menelusuri sendiri bagian mana yang masih memakai versi lama dan memperbaikinya.
   4. Seluruh fungsionalitas saya uji sendiri: akses sebagai pengunjung, pengguna biasa, dan superuser; kondisi *loading*/kosong/*error*; *debouncing* lewat tab Network; status 201/400/403; serta *payload* XSS. Perubahan CSS yang tidak langsung tampak diatasi dengan *hard refresh*.
+
+
+
+### Tugas 6
+
+## Deskripsi Tugas 6
+
+Pada Tugas 6 ini, saya melanjutkan pengembangan halaman **Education** dengan menerapkan Django REST Framework (DRF). Model dan data pendidikan dari tugas sebelumnya tetap digunakan, sedangkan penyajian serta pengelolaan datanya sekarang dilakukan melalui endpoint `/api/v1/education/`. Jika pada Tugas 5 respons JSON disusun secara manual menggunakan `JsonResponse`, pada tugas ini saya menggunakan `EducationSerializer` yang diturunkan dari `ModelSerializer`. Serializer mengatur representasi data, memvalidasi input, serta menyediakan informasi star berupa jumlah star, status star pengguna yang sedang login, dan nama pengguna pemberi star. Field hasil perhitungan tersebut bersifat *read-only*.
+
+Endpoint Education dibagi menjadi daftar, detail, dan star. Endpoint daftar mendukung GET untuk membaca serta POST untuk menambahkan data. Endpoint detail mendukung GET, PUT, PATCH, dan DELETE, sedangkan endpoint star menerima POST dari akun yang sudah login. Pencarian berdasarkan nama institusi dilakukan melalui parameter query `school`. Respons menggunakan status HTTP sesuai hasil operasi, yaitu 201 ketika data berhasil dibuat, 400 untuk input tidak valid, 403 untuk tindakan yang tidak diizinkan, 404 untuk data yang tidak ditemukan, dan 204 setelah data berhasil dihapus.
+
+Hak akses diterapkan melalui `IsPortfolioOwnerOrEditorOrReadOnly` dan `SessionAuthentication`. Pengunjung tanpa login dapat membaca daftar dan detail pendidikan. Pengguna biasa dapat memberikan atau membatalkan star, Editor dapat mengubah data melalui PUT/PATCH, dan pemilik portofolio (*superuser*) dapat menambah, mengubah, serta menghapus data. Endpoint star menggunakan `IsAuthenticated`, dengan identitas pemberi star selalu diambil dari `request.user`. Pemeriksaan akses pada view edit Education lama juga disesuaikan agar Editor dapat mengubah data.
+
+Pada sisi tampilan, halaman Education menggunakan `fetch()` untuk menampilkan, mencari, menambah, mengedit, menghapus, dan memberikan star tanpa me-*reload* halaman. Pengeditan dilakukan melalui modal yang diisi dengan data terbaru dari API, kemudian mengirim perubahan menggunakan PATCH. Notifikasi toast menampilkan hasil operasi maupun pesan kesalahan dari server. Pencarian tetap menggunakan *debouncing* 300 ms dan `AbortController`. Saya juga menambahkan tombol Reset pencarian serta indikator jumlah hasil untuk membantu pengguna mengetahui hasil pencariannya.
+
+Setiap permintaan yang mengubah data menyertakan header `X-CSRFToken`. Input teks dibersihkan melalui `strip_tags` pada method `validate_<field>` di serializer, sedangkan nilai teks yang dimasukkan ke HTML melalui JavaScript tetap di-*escape* menggunakan `escapeHtml()`. Pengujian Education ditulis menggunakan `APITestCase` untuk memeriksa hak akses setiap peran, validasi input, perilaku star, serta perlindungan CSRF. Pada permintaan yang ditolak, test juga memeriksa database untuk memastikan data tidak berubah.
+
+Untuk menjalankan proyek, saya mengaktifkan virtual environment, memasang dependency melalui `python -m pip install -r requirements.txt`, menjalankan `python manage.py migrate`, lalu menyalakan server dengan `python manage.py runserver`. Seluruh test aplikasi, termasuk test Projects dari Tutorial 07, dijalankan menggunakan `python manage.py test main`.
+
+## Pertanyaan Reflektif
+
+1. REST (*Representational State Transfer*) adalah gaya arsitektur untuk merancang komunikasi antara klien dan server dengan memperlakukan data sebagai *resource* yang diakses melalui URL. Pada proyek saya, endpoint `/api/v1/education/` digunakan untuk kumpulan data pendidikan, sedangkan `/api/v1/education/{id}/` digunakan untuk satu data pendidikan. Operasinya menggunakan method HTTP sesuai tujuan, seperti GET untuk membaca, POST untuk menambahkan, PUT/PATCH untuk memperbarui, dan DELETE untuk menghapus data.
+
+   Mengembalikan JSON saja belum cukup untuk menyebut API sebagai RESTful karena JSON merupakan format representasi data. Perancangan API juga perlu mengikuti prinsip REST, seperti pemisahan klien dan server, antarmuka yang konsisten, serta komunikasi *stateless*. Pada komunikasi *stateless*, setiap request membawa informasi yang diperlukan untuk diproses tanpa bergantung pada konteks percakapan request sebelumnya. Implementasi tugas ini sendiri menggunakan sesi login Django sesuai ketentuan `SessionAuthentication`, sehingga penggunaan JSON dan method HTTP belum membuktikan seluruh batasan REST terpenuhi.
+
+   PUT digunakan untuk mengirim representasi pengganti suatu resource, sedangkan PATCH digunakan untuk memperbarui sebagian field. Contohnya, PUT dapat dipakai ketika saya mengirim ulang seluruh field wajib Education, seperti `school`, `degree`, `start_year`, dan `description`. PATCH lebih sesuai ketika saya hanya ingin mengganti `degree` tanpa mengirim ulang field lainnya. Pada implementasi saya, PATCH menggunakan `partial=True` agar field yang tidak dikirim tetap mempertahankan nilai sebelumnya. Field opsional pada PUT tetap mengikuti aturan serializer yang digunakan.
+
+2. Serializer pada Django REST Framework berperan untuk mengubah objek model menjadi representasi data yang dapat dikirim ke klien, sekaligus memvalidasi input sebelum disimpan ke database. Pada proyek saya, `EducationSerializer` menggunakan `ModelSerializer` agar definisi field dan proses dasar penyimpanannya mengikuti model `Education`. Daftar field ditulis secara eksplisit supaya informasi yang ditampilkan API dapat dikendalikan, termasuk memastikan data akun sensitif tidak ikut dikirim.
+
+   Dibandingkan menyusun dictionary secara manual dengan `JsonResponse` pada Tugas 5, serializer membuat representasi data dan validasi input lebih terpusat. View cukup mengirim data ke serializer, memanggil `is_valid()`, lalu menjalankan `save()` jika input valid. Aturan pembersihan teks ditempatkan pada method `validate_<field>`, sedangkan field seperti `star_count` dan `is_starred` dihitung menggunakan `SerializerMethodField`. Dengan demikian, logika yang sama dapat digunakan pada endpoint daftar, detail, tambah, dan update tanpa ditulis berulang di setiap view.
+
+   Serializer juga menyediakan pesan kesalahan per field yang dapat dikembalikan dengan status 400 dan ditampilkan melalui toast. Namun, serializer tidak otomatis menjalankan validasi dari `EducationForm`, sehingga aturan yang diperlukan untuk input API tetap harus diterapkan pada serializer.
+
+3. Autentikasi adalah proses mengenali identitas pengguna, sedangkan otorisasi adalah proses menentukan tindakan yang boleh dilakukan pengguna tersebut. Pada proyek saya, `SessionAuthentication` mengenali akun melalui sesi login Django dan mengisi `request.user`. Setelah identitas diketahui, permission class memeriksa apakah peran pengguna mengizinkan method request yang dikirim.
+
+   Contohnya, pengguna biasa yang sudah login diperbolehkan memberikan star tetapi tetap ditolak saat mencoba menambahkan pendidikan. Editor diperbolehkan melakukan PUT/PATCH, tetapi tidak dapat membuat atau menghapus data. Superuser memiliki akses untuk seluruh operasi pengelolaan Education.
+
+   Hak akses harus diperiksa di server karena menyembunyikan tombol hanya mengatur tampilan antarmuka. Pengguna masih dapat mengirim request secara langsung melalui Console browser atau aplikasi penguji API. Permission class memastikan request yang tidak diizinkan ditolak sebelum perubahan diproses. Karena itu, test penolakan juga memeriksa isi database untuk membuktikan bahwa data tetap sama setelah request ditolak.
+
+4. Permintaan yang mengubah data tetap memerlukan token CSRF karena `SessionAuthentication` menggunakan cookie sesi yang dapat dikirim otomatis oleh browser. Kondisi ini dapat dimanfaatkan situs berbahaya untuk mencoba mengirim permintaan menggunakan sesi pengguna yang masih aktif. Token CSRF membantu server memvalidasi bahwa permintaan menyertakan token yang sesuai dengan cookie CSRF pengguna.
+
+   Pada proyek saya, request POST, PATCH, dan DELETE melalui Fetch menyertakan header `X-CSRFToken`. Template Education juga merender `{% csrf_token %}` agar cookie CSRF tersedia, termasuk untuk pengguna biasa dan Editor yang dapat memberikan star. Pemeriksaan CSRF tetap diperlukan meskipun data dikirim dalam format JSON.
+
+   Test menggunakan `force_authenticate` belum cukup untuk membuktikan perlindungan tersebut karena method ini langsung menetapkan pengguna pada request tanpa menjalankan autentikasi sesi yang sebenarnya. Oleh karena itu, saya menggunakan `APIClient(enforce_csrf_checks=True)` dan `.login()` untuk membentuk sesi login. Test kemudian mengirim request perubahan tanpa token dan memeriksa bahwa responsnya 403 serta database tidak berubah. Request dengan token valid juga diuji agar operasi yang diizinkan tetap dapat berjalan.
+
+## AI Disclosure
+
+- Tool yang digunakan  
+  Gemini
+
+- Tautan Log / Sesi Percakapan  
+  https://share.gemini.google/ECb8dJNEs6Li
+
+- Strategi Prompting  
+  Saya menggunakan AI sebagai pendamping implementasi dan *debugging* secara bertahap. Saya melampirkan PDF tutorial dan tugas, ZIP kode proyek, serta tangkapan layar kode dan terminal. Saya meminta AI menyesuaikan implementasi dengan model Education yang sudah ada, memeriksa seluruh checklist tugas, dan memberikan petunjuk perubahan pada bagian kode tertentu.
+
+- Bagian yang Dibantu AI
+
+  1. Menyusun `EducationSerializer`, validasi input teks dan logo, serta field informasi star yang bersifat *read-only*.
+  2. Menyusun permission empat peran dan endpoint Education untuk daftar, detail, CRUD, pencarian, serta star.
+  3. Mengintegrasikan endpoint DRF dengan halaman Education melalui Fetch, termasuk modal edit, toast, CSRF, dan escaping.
+  4. Menyusun test hak akses, validasi, star, dan CSRF, serta membantu menelusuri kesalahan nama file saat proses staging dan commit.
+
+- Keterbatasan AI & Penyesuaian Selama Pengerjaan
+
+  1. Saran awal AI menggunakan `EducationForm(prefix='edit')`, sehingga nama input berubah menjadi `edit-school`, sementara JavaScript mencari `school`. Setelah ketidaksesuaian ditemukan, AI memberikan koreksi menjadi `EducationForm(auto_id='edit_%s')` agar ID input tetap unik dan nama field sesuai dengan JavaScript.
+  2. Panduan AI menggunakan nama file `tests_education_api.py`, sedangkan file yang saya buat bernama `test_education_api.py`. Perbedaan nama tersebut menyebabkan `git add` gagal. Perintah kemudian disesuaikan dengan nama file yang benar-benar ada di proyek.
+  3. AI dapat memeriksa kode dan menjalankan test pada salinan proyek, tetapi hasilnya perlu dibedakan dari kondisi terbaru di laptop maupun deployment
+  4. Saya menerapkan perubahan melalui VS Code secara bertahap, menyesuaikan bagian kode yang berubah, dan menggunakan hasil terminal serta tangkapan layar untuk meninjau masalah yang muncul. Proses ini menunjukkan bahwa saran AI tetap perlu diperiksa terhadap struktur proyek dan hasil eksekusi yang sebenarnya.
