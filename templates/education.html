@@ -249,6 +249,8 @@
         return pattern.replace('/0/', `/${id}/`);
     }
 
+    // Pilih field model secara eksplisit agar token CSRF dan kontrol form
+    // tidak ikut menjadi payload. Form tambah dan edit memakai nama field sama.
     function educationPayload(form) {
         const fields = new FormData(form);
         return Object.fromEntries(
@@ -257,6 +259,9 @@
         );
     }
 
+    // Satukan pengiriman JSON, token CSRF, dan pembacaan error API agar semua
+    // operasi tulis mengikuti alur yang sama. Token diperlukan karena browser
+    // menggunakan cookie sesi untuk mengenali pengguna yang sedang login.
     async function writeEducation(url, method, payload) {
         const response = await fetch(url, {
             method,
@@ -278,6 +283,8 @@
 
     const editForm = document.getElementById('education-edit-form');
     const editModal = document.getElementById('edit-education-modal');
+    // Event delegation menangani tombol pada kartu yang dibuat ulang setelah fetch.
+    // Listener cukup dipasang sekali pada grid, termasuk untuk kartu yang baru ditambah.
     gridContainer.addEventListener('click', async event => {
         const button = event.target.closest('button[data-action]');
         if (!button || button.disabled) return;
@@ -308,7 +315,10 @@
             button.disabled = false;
         }
     });
-
+    
+    // Modal edit hanya dirender untuk Editor dan pemilik.
+    // Optional chaining melewati pemasangan listener ketika form tidak tersedia.
+    // Setelah PATCH berhasil, daftar dimuat ulang dengan kata kunci pencarian aktif.
     editForm?.addEventListener('submit', async event => {
         event.preventDefault();
         const button = editForm.querySelector('[type="submit"]');

@@ -43,13 +43,15 @@ def show_experience(request): # untuk Experience page
 
 def show_education(request): # untuk Education page
     # cuma ngerender kerangka halaman. Datanya sengaja nggak dikirim
-    # lewat context, karena sekarang diambil browser sendiri lewat fetch() ke get_education_json
+    # lewat context, karena data sekarang dimuat browser melalui API DRF Education.
     school_query = request.GET.get("school", "").strip()
 
     context = {
         'name': 'Nasywa Namira Suhendro',
         'school_query': school_query,
         'can_edit_education': request.user.is_superuser or (request.user.is_authenticated and is_editor(request.user)),
+        # ID input edit dibedakan dari modal tambah untuk menghindari duplikasi ID.
+        # Nama field tetap school, degree, dan seterusnya agar cocok dengan JavaScript.
         'edit_form': EducationForm(auto_id='edit_%s'),
         'form': EducationForm(), # form kosong, cuma buat di-render di dalam modal
 
