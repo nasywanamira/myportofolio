@@ -16,6 +16,9 @@ class IsPortfolioOwnerOrEditorOrReadOnly(BasePermission):
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS or request.user.is_superuser:
             return True
+        # Editor hanya mendapat izin update. POST dan DELETE tetap ditolak.
+        # Pemeriksaan server tetap berlaku meskipun request dikirim langsung
+        # melalui Console browser tanpa menggunakan tombol di halaman.
         return (
             request.method in ("PUT", "PATCH")
             and request.user.is_authenticated

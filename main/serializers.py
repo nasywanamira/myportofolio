@@ -44,18 +44,26 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class EducationSerializer(serializers.ModelSerializer):
+    # Nilai star dihitung dari relasi database dan akun pada request.
+    # SerializerMethodField otomatis read-only, sehingga klien tidak bisa
+    # memalsukan jumlah star atau status star melalui payload create/update.
     star_count = serializers.SerializerMethodField()
     is_starred = serializers.SerializerMethodField()
     starred_by_names = serializers.SerializerMethodField()
 
     class Meta:
         model = Education
+        # Field ditulis eksplisit agar kontrak API terkontrol dan data akun
+        # sensitif tidak ikut terekspos saat struktur model berkembang.
         fields = [
             "id", "school", "degree", "start_year", "end_year", "description", "logo",
             "star_count", "is_starred", "starred_by_names",
         ]
         read_only_fields = ["id"]
 
+    # Request API menjalankan validasi serializer secara terpisah dari EducationForm.
+    # Periksa lagi setelah strip_tags agar input yang hanya berisi tag ikut ditolak.
+    # Escaping saat render tetap diperlukan untuk melindungi tampilan data lama.
     def validate_school(self, value):
         value = strip_tags(value).strip()
         if not value:
@@ -87,6 +95,8 @@ class EducationSerializer(serializers.ModelSerializer):
         if not value:
             return value
         value = strip_tags(value).strip()
+        # Logo boleh memakai path lokal atau URL HTTP/HTTPS.
+        # Awalan // dan /\ ditolak agar tidak dianggap sebagai alamat host lain.
         if value.startswith("/") and not value.startswith(("//", "/\\")):
             return value
         from django.core.validators import URLValidator
@@ -101,6 +111,9 @@ class EducationSerializer(serializers.ModelSerializer):
         return obj.starred_by.count()
 
     def get_is_starred(self, obj):
+        # Status ini bergantung pada akun yang membaca API.
+        # Objek Education yang sama dapat menghasilkan is_starred berbeda
+        # untuk dua pengguna, sehingga request diteruskan melalui context.
         request = self.context.get("request")
         return bool(request and request.user.is_authenticated and request.user in obj.starred_by.all())
 
