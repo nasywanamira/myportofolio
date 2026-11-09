@@ -82,12 +82,17 @@ def project_star(request, project_id):
 def education_list(request):
     context = {"request": request}
     if request.method in ("GET", "HEAD"):
+        # Ambil relasi pemberi star sekaligus untuk mengurangi query berulang
+        # saat serializer menghitung star dan membaca nama pengguna tiap kartu.
+        # ID menjadi pembeda urutan ketika beberapa institusi bernama sama.
         educations = Education.objects.prefetch_related("starred_by").order_by("school", "id")
         school = request.query_params.get("school", "").strip()
         if school:
             educations = educations.filter(school__icontains=school)
         return Response(EducationSerializer(educations, many=True, context=context).data)
     serializer = EducationSerializer(data=request.data, context=context)
+    # Hentikan request dengan respons 400 beserta error per field jika input salah.
+    # save() hanya dijalankan setelah seluruh validasi berhasil.
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -104,11 +109,15 @@ def education_detail(request, education_id):
     if request.method == "DELETE":
         education.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    # Instance education membuat save() memperbarui objek yang sudah ada.
+    # PATCH menerima sebagian field, sedangkan PUT memerlukan seluruh field wajib.
     serializer = EducationSerializer(
         education, data=request.data, partial=request.method == "PATCH", context=context,
     )
     serializer.is_valid(raise_exception=True)
     serializer.save()
+    # DELETE berhasil mengembalikan body kosong.
+    # Frontend harus melewati pemanggilan response.json() untuk status 204.
     return Response(serializer.data)
 
 
@@ -117,6 +126,9 @@ def education_detail(request, education_id):
 @permission_classes([IsAuthenticated])
 def education_star(request, education_id):
     education = get_object_or_404(Education, pk=education_id)
+    # Identitas pemberi star berasal dari sesi login, bukan ID kiriman klien.
+    # Endpoint bersifat toggle, sehingga dua POST akan menambah lalu membatalkan
+    # star. Frontend menonaktifkan tombol selama request dan tidak retry otomatis.
     if education.starred_by.filter(pk=request.user.pk).exists():
         education.starred_by.remove(request.user)
     else:
